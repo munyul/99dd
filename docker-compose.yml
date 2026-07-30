@@ -1,0 +1,27 @@
+services:
+  client:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./client:/app
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+
+  server:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./server:/app
+    ports:
+      - "3000:3000"
+    command: sh -c "npm install && npm run dev"
+
+  ocr-service:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./ocr-service:/app
+    ports:
+      - "8000:8000"
+    command: sh -c "pip install -r requirements.txt && uvicorn main:app --host 0.0.0.0 --port 8000"
