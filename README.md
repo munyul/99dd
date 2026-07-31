@@ -54,3 +54,4 @@ uvicorn main:app --reload
 - `.env`, `serviceAccountKey.json`, `node_modules`는 커밋하지 않습니다.
 - `client/src/App.jsx`는 라우팅 연결 담당자만 수정합니다.
 - `client/src/components/master`와 `client/src/components/layout`은 확정 후 임의 수정하지 않습니다.
+..
