@@ -5,6 +5,10 @@ import StatusBar from '../../components/layout/StatusBar.jsx'
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024
 const ACCEPTED_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png']
+const ROUTE_PATHS = {
+  home: '/',
+  ocrProgress: '/screen/9',
+}
 
 const pageStyles = `
   .fu-page,
@@ -415,6 +419,7 @@ function formatFileSize(bytes) {
 function FileUpload({ onClose, onFileSelect, onStartAnalysis }) {
   const navigate = useNavigate()
   const fileInputRef = useRef(null)
+  const dragDepthRef = useRef(0)
   const [selectedFile, setSelectedFile] = useState(null)
   const [errorMessage, setErrorMessage] = useState('')
   const [isDragging, setIsDragging] = useState(false)
@@ -445,8 +450,29 @@ function FileUpload({ onClose, onFileSelect, onStartAnalysis }) {
     selectFile(event.target.files?.[0])
   }
 
+  const handleDragEnter = (event) => {
+    event.preventDefault()
+    dragDepthRef.current += 1
+    setIsDragging(true)
+  }
+
+  const handleDragOver = (event) => {
+    event.preventDefault()
+    event.dataTransfer.dropEffect = 'copy'
+  }
+
+  const handleDragLeave = (event) => {
+    event.preventDefault()
+    dragDepthRef.current = Math.max(0, dragDepthRef.current - 1)
+
+    if (dragDepthRef.current === 0) {
+      setIsDragging(false)
+    }
+  }
+
   const handleDrop = (event) => {
     event.preventDefault()
+    dragDepthRef.current = 0
     setIsDragging(false)
     selectFile(event.dataTransfer.files?.[0])
   }
@@ -468,7 +494,7 @@ function FileUpload({ onClose, onFileSelect, onStartAnalysis }) {
       return
     }
 
-    navigate('/')
+    navigate(ROUTE_PATHS.home)
   }
 
   const handleStartAnalysis = () => {
@@ -479,7 +505,7 @@ function FileUpload({ onClose, onFileSelect, onStartAnalysis }) {
       return
     }
 
-    navigate('/screen/9')
+    navigate(ROUTE_PATHS.ocrProgress)
   }
 
   const isPdf = getFileExtension(selectedFile?.name ?? '') === 'pdf'
@@ -501,6 +527,8 @@ function FileUpload({ onClose, onFileSelect, onStartAnalysis }) {
               className="fu-file-input"
               type="file"
               accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+              tabIndex={-1}
+              aria-hidden="true"
               onChange={handleInputChange}
             />
 
@@ -509,9 +537,9 @@ function FileUpload({ onClose, onFileSelect, onStartAnalysis }) {
               className={`fu-upload-zone ${isDragging ? 'is-dragging' : ''}`.trim()}
               aria-describedby={errorMessage ? 'file-upload-error' : undefined}
               onClick={openFilePicker}
-              onDragEnter={() => setIsDragging(true)}
-              onDragOver={(event) => event.preventDefault()}
-              onDragLeave={() => setIsDragging(false)}
+              onDragEnter={handleDragEnter}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
               onDrop={handleDrop}
             >
               <span className="fu-upload-icon-box">
