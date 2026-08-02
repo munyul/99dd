@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router'
 import DeviceShell from '../../components/layout/DeviceShell.jsx'
+
+const ANALYSIS_RESULT_PATH = '/screen/12'
 
 const ANALYSIS_STEPS = [
   {
@@ -346,6 +349,7 @@ function AiAnalysis({
   demoTarget = ANALYSIS_STEPS.length,
   onComplete,
 }) {
+  const navigate = useNavigate()
   const [demoStep, setDemoStep] = useState(0)
   const [demoFindingIndex, setDemoFindingIndex] = useState(-1)
   const hasCompletedRef = useRef(false)
@@ -398,11 +402,17 @@ function AiAnalysis({
       if (hasCompletedRef.current) return
 
       hasCompletedRef.current = true
-      onComplete?.()
+
+      if (onComplete) {
+        onComplete()
+        return
+      }
+
+      navigate(ANALYSIS_RESULT_PATH)
     }, 700)
 
     return () => window.clearTimeout(completionTimerId)
-  }, [isComplete, onComplete])
+  }, [isComplete, navigate, onComplete])
 
   const liveStatus = isComplete
     ? 'AI 계약서 분석이 완료되었습니다.'
