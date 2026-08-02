@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router'
 import DeviceShell from '../../components/layout/DeviceShell.jsx'
+
+const OCR_REVIEW_PATH = '/screen/10'
 
 const DOCUMENT_LINES = [
   { width: 48, height: 9 },
@@ -501,9 +504,10 @@ function DocumentLines({ recognized = false }) {
 function OcrProgress({
   progress,
   stage,
-  demoTarget = 64,
+  demoTarget = 100,
   onComplete,
 }) {
+  const navigate = useNavigate()
   const [demoProgress, setDemoProgress] = useState(0)
   const hasCompletedRef = useRef(false)
   const isControlled = Number.isFinite(progress)
@@ -536,11 +540,28 @@ function OcrProgress({
   }, [demoTarget, isControlled])
 
   useEffect(() => {
-    if (currentProgress < 100 || hasCompletedRef.current) return
+    if (currentProgress < 100) {
+      hasCompletedRef.current = false
+      return undefined
+    }
 
-    hasCompletedRef.current = true
-    onComplete?.()
-  }, [currentProgress, onComplete])
+    if (hasCompletedRef.current) return undefined
+
+    const completionTimerId = window.setTimeout(() => {
+      if (hasCompletedRef.current) return
+
+      hasCompletedRef.current = true
+
+      if (onComplete) {
+        onComplete()
+        return
+      }
+
+      navigate(OCR_REVIEW_PATH)
+    }, 700)
+
+    return () => window.clearTimeout(completionTimerId)
+  }, [currentProgress, navigate, onComplete])
 
   return (
     <>

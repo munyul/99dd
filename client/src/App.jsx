@@ -10,6 +10,7 @@ import FileUpload from './pages/2.동율/8_fileUpload.jsx'
 import OcrProgress from './pages/2.동율/9_ocrProgress.jsx'
 import OcrReview from './pages/2.동율/10_ocrReview.jsx'
 import AiAnalysis from './pages/2.동율/11_aiAnalysis.jsx'
+import AnalysisResult from './pages/2.동율/12_result.jsx'
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
       <Route path="/screen/9" element={<OcrProgress />} />
       <Route path="/screen/10" element={<OcrReview />} />
       <Route path="/screen/11" element={<AiAnalysis />} />
+      <Route path="/screen/12" element={<AnalysisResult />} />
     </Routes>
   )
 }
