@@ -164,7 +164,7 @@ function Master() {
     history: <HistoryContent />,
     alarm: <AlarmContent />,
     my: <MyContent />,
-  }
+    }
 
   return (
     <MainLayout

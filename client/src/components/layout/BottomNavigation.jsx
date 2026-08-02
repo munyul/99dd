@@ -1,16 +1,24 @@
-const navigationItems = [
-  { key: 'home', icon: 'home', label: '홈' },
-  { key: 'capture', icon: 'photo_camera', label: '촬영' },
-  { key: 'history', icon: 'folder', label: '내역' },
-  { key: 'alarm', icon: 'notifications', label: '알림' },
-  { key: 'my', icon: 'person', label: '마이' },
-]
+import { useLocation, useNavigate } from 'react-router'
+import { BOTTOM_NAV_ITEMS, getActiveTabFromPath } from '../../constants/screenRoutes.js'
 
 function BottomNavigation({ activeTab, onTabChange }) {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const currentTab = activeTab ?? getActiveTabFromPath(location.pathname)
+
+  function handleTabClick(item) {
+    if (onTabChange) {
+      onTabChange(item.key)
+      return
+    }
+
+    navigate(item.path)
+  }
+
   return (
     <nav className="bottomnav" aria-label="하단 메뉴">
-      {navigationItems.map((item) => {
-        const isActive = item.key === activeTab
+      {BOTTOM_NAV_ITEMS.map((item) => {
+        const isActive = item.key === currentTab
 
         return (
           <button
@@ -18,7 +26,7 @@ function BottomNavigation({ activeTab, onTabChange }) {
             type="button"
             className={`navitem ${isActive ? 'active' : ''}`.trim()}
             aria-current={isActive ? 'page' : undefined}
-            onClick={() => onTabChange(item.key)}
+            onClick={() => handleTabClick(item)}
           >
             <span className={`msr ${isActive ? 'fill' : ''}`.trim()}>{item.icon}</span>
             <span>{item.label}</span>

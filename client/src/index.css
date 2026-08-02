@@ -121,6 +121,20 @@ p {
 .gap10 { gap: 10px; }
 .gap12 { gap: 12px; }
 
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.mt4 { margin-top: 4px; }
+.mt16 { margin-top: 16px; }
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .master-stage {
   display: grid;
   min-height: 100vh;
@@ -211,6 +225,25 @@ p {
 .topnav-title {
   font-size: 17px;
   font-weight: 800;
+}
+
+.alarmhead {
+  display: flex;
+  /* height: var(--topnav-h); */
+  height: 42px;
+  flex-shrink: 0;
+  align-items: center;
+  /* padding: 6px 20px 16px; */
+  padding: 4px 20px 8px;
+}
+
+.alarmhead-title {
+  margin: 0;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .topnav-placeholder {
@@ -536,6 +569,7 @@ p {
   margin-bottom: 12px;
 }
 
+/* 기존 Master.jsx의 AlarmContent용 스타일 */
 .notification-item {
   display: flex;
   align-items: flex-start;
@@ -553,6 +587,110 @@ p {
 
 .notification-default {
   color: var(--ink-2);
+}
+
+/* 18_alert.jsx 전용 스타일 */
+.alert-notification-list {
+  /* padding: 4px 0 16px; */
+  padding: 0;
+}
+
+.alert-notification-section + .alert-notification-section {
+  margin-top: 30px;
+}
+
+.alert-notification-section-title {
+  margin: 0 0 18px;
+  color: var(--ink-3);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.alert-notification-items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.alert-notification-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 14px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+.alert-notification-icon {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+}
+
+.alert-notification-icon .msr {
+  font-size: 24px;
+}
+
+.notification-icon-danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.notification-icon-complete {
+  background: var(--safe-bg);
+  color: var(--safe);
+}
+
+.notification-icon-default {
+  background: #f1f1f1;
+  color: var(--ink);
+}
+
+.alert-notification-content {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.alert-notification-title {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.alert-notification-description {
+  display: -webkit-box;
+  margin-top: 4px;
+  overflow: hidden;
+  color: var(--ink-3);
+  font-size: 12px;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  /* line-clamp: 2; 추가 - 시준 */
+}
+
+.alert-notification-time {
+  margin-top: 4px;
+  color: var(--ink-3);
+  font-size: 12px;
+}
+
+.alert-notification-empty {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: 13px;
 }
 
 .profile-summary {
@@ -610,4 +748,210 @@ p {
   .statusbar {
     display: none;
   }
+}
+
+/* =========================
+   Analysis History
+========================= */
+
+.history-card {
+  padding: 16px;
+}
+
+
+.history-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+
+.history-icon-danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+
+.history-icon-caution {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+
+.history-icon-safe {
+  background: var(--safe-bg);
+  color: var(--safe);
+}
+
+
+.history-icon-pending {
+  background: #f1f1f1;
+  color: #999;
+}
+
+
+.history-body {
+  flex: 1;
+  min-width: 0;
+}
+
+
+.badge-gray {
+  background: #eeeeee;
+  color: #777;
+}
+
+/* 읽지 않은 알림 표시용-시준 */
+.unread-dot {
+  width: 8px;
+  height: 8px;
+  margin-left: auto;
+  align-self: center;
+  border-radius: 50%;
+  background: var(--yellow);
+  flex-shrink: 0;
+}
+
+/* =========================
+   Expert Consultation
+========================= */
+
+.expert-consultation-page {
+  padding: 14px 0 28px;
+}
+
+.expert-intro p {
+  color: var(--ink-2);
+  font-size: 18px;
+  line-height: 1.65;
+}
+
+.expert-option-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 42px;
+}
+
+.expert-option-card {
+  display: flex;
+  width: 100%;
+  min-height: 132px;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 28px 24px 20px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  text-align: left;
+}
+
+.expert-option-card:focus-visible,
+.expert-faq-question:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.expert-option-icon {
+  display: inline-flex;
+  width: 68px;
+  height: 68px;
+  flex: 0 0 68px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22px;
+  background: #f1f1f1;
+}
+
+.expert-option-icon .msr {
+  font-size: 34px;
+}
+
+.expert-option-icon-highlight {
+  background: var(--yellow-soft);
+}
+
+.expert-option-copy {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+}
+
+.expert-option-copy strong {
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.expert-option-copy span {
+  color: var(--ink-3);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.expert-option-arrow {
+  margin-left: auto;
+  color: var(--ink-3);
+  font-size: 30px;
+}
+
+.expert-faq {
+  margin-top: 40px;
+}
+
+.expert-faq h2 {
+  margin-bottom: 16px;
+  color: var(--ink-3);
+  font-size: 16px;
+}
+
+.expert-faq-list {
+  display: grid;
+  gap: 14px;
+}
+
+.expert-faq-item {
+  overflow: hidden;
+  border-radius: 28px;
+  background: #f6f6f5;
+}
+
+.expert-faq-question {
+  display: flex;
+  width: 100%;
+  min-height: 88px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 28px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 800;
+  text-align: left;
+}
+
+.expert-faq-question .msr {
+  color: var(--ink-3);
+  transition: transform 160ms ease;
+}
+
+.expert-faq-item.is-open .expert-faq-question .msr {
+  transform: rotate(180deg);
+}
+
+.expert-faq-answer {
+  padding: 0 28px 24px;
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.65;
 }
