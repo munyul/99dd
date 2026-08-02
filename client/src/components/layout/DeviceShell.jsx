@@ -1,16 +1,18 @@
 import StatusBar from './StatusBar.jsx'
 
-/**
- * 공통 휴대폰 프레임.
- * Header, content-slot, BottomNavigation 등은 children으로 각 페이지에서 구성합니다.
- */
-function DeviceShell({ children }) {
+function DeviceShell({
+  children,
+  className = '',
+  deviceClassName = '',
+  showStatusBar = true,
+}) {
   return (
-    <div className="master-stage">
-      <div className="device">
+    <div className={`master-stage ${className}`.trim()}>
+      <div className={`device ${deviceClassName}`.trim()}>
         <div className="notch" aria-hidden="true" />
+
         <div className="app-shell">
-          <StatusBar />
+          {showStatusBar ? <StatusBar /> : null}
           {children}
         </div>
       </div>
@@ -19,3 +21,4 @@ function DeviceShell({ children }) {
 }
 
 export default DeviceShell
+
