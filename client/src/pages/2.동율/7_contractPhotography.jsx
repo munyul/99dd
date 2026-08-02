@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router'
+import DeviceShell from '../../components/layout/DeviceShell.jsx'
 
 const ROUTE_PATHS = {
   home: '/',
@@ -30,24 +31,11 @@ const pageStyles = `
   }
 
   .cp-page {
-    display: grid;
     min-height: 100dvh;
-    place-items: center;
-    padding: 28px;
-    background: #ededed;
   }
 
   .cp-device {
-    position: relative;
-    width: 390px;
-    height: min(844px, calc(100dvh - 56px));
-    overflow: hidden;
-    flex-shrink: 0;
-    border: 10px solid #111111;
-    border-radius: 55px;
     background: #0b0b0b;
-    box-shadow: 0 16px 40px rgba(20, 20, 20, 0.12),
-      0 4px 12px rgba(20, 20, 20, 0.06);
   }
 
   .cp-screen {
@@ -60,18 +48,6 @@ const pageStyles = `
     overflow: hidden;
     background: #0b0b0b;
     color: #ffffff;
-  }
-
-  .cp-notch {
-    position: absolute;
-    z-index: 50;
-    top: 10px;
-    left: 50%;
-    width: 120px;
-    height: 28px;
-    transform: translateX(-50%);
-    border-radius: 20px;
-    background: #111111;
   }
 
   .cp-statusbar {
@@ -272,20 +248,9 @@ const pageStyles = `
 
   @media (max-width: 480px) {
     .cp-page {
-      display: block;
-      padding: 0;
       background: #0b0b0b;
     }
 
-    .cp-device {
-      width: 100%;
-      height: 100dvh;
-      border: 0;
-      border-radius: 0;
-      box-shadow: none;
-    }
-
-    .cp-notch,
     .cp-statusbar {
       display: none;
     }
@@ -400,12 +365,14 @@ function ContractPhotography({
   }
 
   return (
-    <div className="cp-page">
+    <>
       <style>{pageStyles}</style>
 
-      <section className="cp-device" aria-label="계약서 촬영 화면">
-        <div className="cp-notch" aria-hidden="true" />
-
+      <DeviceShell
+        className="cp-page"
+        deviceClassName="cp-device"
+        showStatusBar={false}
+      >
         <div className="cp-screen">
           <div className="cp-statusbar" aria-hidden="true">
             <span>9:41</span>
@@ -440,7 +407,7 @@ function ContractPhotography({
             </button>
           </header>
 
-          <main className="cp-main">
+          <main className="cp-main" aria-label="계약서 촬영">
             <DocumentGuide />
             <div className="cp-hint">
               계약서 전체가 잘 보이게 맞춰주세요
@@ -468,8 +435,8 @@ function ContractPhotography({
             />
           </footer>
         </div>
-      </section>
-    </div>
+      </DeviceShell>
+    </>
   )
 }
 
