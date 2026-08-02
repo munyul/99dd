@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import StatusBar from '../../components/layout/StatusBar.jsx'
+import DeviceShell from '../../components/layout/DeviceShell.jsx'
 
 const DOCUMENT_LINES = [
   { width: 48, height: 9 },
@@ -543,59 +543,57 @@ function OcrProgress({
   }, [currentProgress, onComplete])
 
   return (
-    <div className="master-stage op-page">
+    <>
       <style>{pageStyles}</style>
 
-      <section className="device op-device" aria-label="OCR 진행 화면">
-        <div className="notch" aria-hidden="true" />
-
-        <div className="app-shell">
-          <StatusBar />
-
-          <main className="op-content">
-            <div className="op-document" aria-hidden="true">
-              <DocumentLines />
-              <div className="op-recognition-layer">
-                <DocumentLines recognized />
-              </div>
-              <div className="op-scan-beam" />
+      <DeviceShell
+        className="op-page"
+        deviceClassName="op-device"
+        ariaLabel="OCR 진행 화면"
+      >
+        <main className="op-content">
+          <div className="op-document" aria-hidden="true">
+            <DocumentLines />
+            <div className="op-recognition-layer">
+              <DocumentLines recognized />
             </div>
+            <div className="op-scan-beam" />
+          </div>
 
-            <div className="op-status-copy" role="status" aria-live="polite">
-              <div className="op-stage-badge">
-                <span className="op-stage-dot" />
-                <span>{currentStage.label}</span>
-              </div>
-              <h1 className="op-title">{currentStage.title}</h1>
-              <p className="op-description">{currentStage.description}</p>
+          <div className="op-status-copy" role="status" aria-live="polite">
+            <div className="op-stage-badge">
+              <span className="op-stage-dot" />
+              <span>{currentStage.label}</span>
             </div>
+            <h1 className="op-title">{currentStage.title}</h1>
+            <p className="op-description">{currentStage.description}</p>
+          </div>
 
-            <div
-              className="op-progress-wrap"
-              role="progressbar"
-              aria-label="계약서 OCR 진행률"
-              aria-valuemin="0"
-              aria-valuemax="100"
-              aria-valuenow={currentProgress}
-              aria-valuetext={`${currentStage.label}, ${currentProgress}%`}
-            >
-              <div className="op-progress-meta">
-                <span className="op-progress-label">전체 진행률</span>
-                <span className="op-progress-value">{currentProgress}%</span>
-              </div>
-              <div className="op-progress-track">
-                <div
-                  className={`op-progress-fill ${
-                    currentProgress >= 100 ? 'is-complete' : ''
-                  }`.trim()}
-                  style={{ width: `${currentProgress}%` }}
-                />
-              </div>
+          <div
+            className="op-progress-wrap"
+            role="progressbar"
+            aria-label="계약서 OCR 진행률"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow={currentProgress}
+            aria-valuetext={`${currentStage.label}, ${currentProgress}%`}
+          >
+            <div className="op-progress-meta">
+              <span className="op-progress-label">전체 진행률</span>
+              <span className="op-progress-value">{currentProgress}%</span>
             </div>
-          </main>
-        </div>
-      </section>
-    </div>
+            <div className="op-progress-track">
+              <div
+                className={`op-progress-fill ${
+                  currentProgress >= 100 ? 'is-complete' : ''
+                }`.trim()}
+                style={{ width: `${currentProgress}%` }}
+              />
+            </div>
+          </div>
+        </main>
+      </DeviceShell>
+    </>
   )
 }
 

@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
+import DeviceShell from '../../components/layout/DeviceShell.jsx'
 import Header from '../../components/layout/Header.jsx'
-import StatusBar from '../../components/layout/StatusBar.jsx'
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024
 const ACCEPTED_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png']
@@ -511,97 +511,96 @@ function FileUpload({ onClose, onFileSelect, onStartAnalysis }) {
   const isPdf = getFileExtension(selectedFile?.name ?? '') === 'pdf'
 
   return (
-    <div className="master-stage fu-page">
+    <>
       <style>{pageStyles}</style>
 
-      <section className="device fu-device" aria-label="파일 업로드 화면">
-        <div className="notch" aria-hidden="true" />
+      <DeviceShell
+        className="fu-page"
+        deviceClassName="fu-device"
+        ariaLabel="파일 업로드 화면"
+      >
+        <Header title="파일 업로드" leftIcon="close" onLeftClick={handleClose} />
 
-        <div className="app-shell">
-          <StatusBar />
-          <Header title="파일 업로드" leftIcon="close" onLeftClick={handleClose} />
+        <main className="fu-content">
+          <input
+            ref={fileInputRef}
+            className="fu-file-input"
+            type="file"
+            accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+            tabIndex={-1}
+            aria-hidden="true"
+            onChange={handleInputChange}
+          />
 
-          <main className="fu-content">
-            <input
-              ref={fileInputRef}
-              className="fu-file-input"
-              type="file"
-              accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
-              tabIndex={-1}
-              aria-hidden="true"
-              onChange={handleInputChange}
-            />
+          <button
+            type="button"
+            className={`fu-upload-zone ${isDragging ? 'is-dragging' : ''}`.trim()}
+            aria-describedby={errorMessage ? 'file-upload-error' : undefined}
+            onClick={openFilePicker}
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <span className="fu-upload-icon-box">
+              <UploadFileIcon />
+            </span>
+            <span className="fu-upload-title">여기를 눌러 파일을 선택하세요</span>
+            <span className="fu-upload-description">PDF, JPG, PNG · 최대 20MB</span>
+            <span className="fu-select-button">파일 선택하기</span>
+          </button>
 
-            <button
-              type="button"
-              className={`fu-upload-zone ${isDragging ? 'is-dragging' : ''}`.trim()}
-              aria-describedby={errorMessage ? 'file-upload-error' : undefined}
-              onClick={openFilePicker}
-              onDragEnter={handleDragEnter}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-            >
-              <span className="fu-upload-icon-box">
-                <UploadFileIcon />
-              </span>
-              <span className="fu-upload-title">여기를 눌러 파일을 선택하세요</span>
-              <span className="fu-upload-description">PDF, JPG, PNG · 최대 20MB</span>
-              <span className="fu-select-button">파일 선택하기</span>
-            </button>
+          {errorMessage ? (
+            <p id="file-upload-error" className="fu-error" role="alert">
+              {errorMessage}
+            </p>
+          ) : null}
 
-            {errorMessage ? (
-              <p id="file-upload-error" className="fu-error" role="alert">
-                {errorMessage}
-              </p>
-            ) : null}
+          <section className="fu-file-section" aria-labelledby="selected-file-title">
+            <h2 id="selected-file-title" className="fu-section-label">
+              선택된 파일
+            </h2>
 
-            <section className="fu-file-section" aria-labelledby="selected-file-title">
-              <h2 id="selected-file-title" className="fu-section-label">
-                선택된 파일
-              </h2>
+            {selectedFile ? (
+              <article className="fu-file-card">
+                <span className={`fu-file-icon-box ${isPdf ? '' : 'is-image'}`.trim()}>
+                  {isPdf ? <PdfIcon /> : <ImageFileIcon />}
+                </span>
 
-              {selectedFile ? (
-                <article className="fu-file-card">
-                  <span className={`fu-file-icon-box ${isPdf ? '' : 'is-image'}`.trim()}>
-                    {isPdf ? <PdfIcon /> : <ImageFileIcon />}
-                  </span>
-
-                  <div className="fu-file-info">
-                    <div className="fu-file-name" title={selectedFile.name}>
-                      {selectedFile.name}
-                    </div>
-                    <div className="fu-file-size">{formatFileSize(selectedFile.size)}</div>
+                <div className="fu-file-info">
+                  <div className="fu-file-name" title={selectedFile.name}>
+                    {selectedFile.name}
                   </div>
+                  <div className="fu-file-size">{formatFileSize(selectedFile.size)}</div>
+                </div>
 
-                  <button
-                    type="button"
-                    className="fu-remove-file"
-                    aria-label={`${selectedFile.name} 선택 취소`}
-                    onClick={handleRemoveFile}
-                  >
-                    <CloseIcon />
-                  </button>
-                </article>
-              ) : (
-                <div className="fu-empty-file">선택된 파일이 없습니다.</div>
-              )}
-            </section>
-          </main>
+                <button
+                  type="button"
+                  className="fu-remove-file"
+                  aria-label={`${selectedFile.name} 선택 취소`}
+                  onClick={handleRemoveFile}
+                >
+                  <CloseIcon />
+                </button>
+              </article>
+            ) : (
+              <div className="fu-empty-file">선택된 파일이 없습니다.</div>
+            )}
+          </section>
+        </main>
 
-          <footer className="fu-footer">
-            <button
-              type="button"
-              className="fu-analyze-button"
-              disabled={!selectedFile}
-              onClick={handleStartAnalysis}
-            >
-              분석 시작하기
-            </button>
-          </footer>
-        </div>
-      </section>
-    </div>
+        <footer className="fu-footer">
+          <button
+            type="button"
+            className="fu-analyze-button"
+            disabled={!selectedFile}
+            onClick={handleStartAnalysis}
+          >
+            분석 시작하기
+          </button>
+        </footer>
+      </DeviceShell>
+    </>
   )
 }
 
