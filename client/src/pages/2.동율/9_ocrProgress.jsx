@@ -549,9 +549,8 @@ function OcrProgress({
       <DeviceShell
         className="op-page"
         deviceClassName="op-device"
-        ariaLabel="OCR 진행 화면"
       >
-        <main className="op-content">
+        <main className="op-content" aria-label="OCR 진행">
           <div className="op-document" aria-hidden="true">
             <DocumentLines />
             <div className="op-recognition-layer">

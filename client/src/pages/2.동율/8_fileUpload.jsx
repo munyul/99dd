@@ -517,11 +517,10 @@ function FileUpload({ onClose, onFileSelect, onStartAnalysis }) {
       <DeviceShell
         className="fu-page"
         deviceClassName="fu-device"
-        ariaLabel="파일 업로드 화면"
       >
         <Header title="파일 업로드" leftIcon="close" onLeftClick={handleClose} />
 
-        <main className="fu-content">
+        <main className="fu-content" aria-label="파일 업로드">
           <input
             ref={fileInputRef}
             className="fu-file-input"
