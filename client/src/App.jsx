@@ -7,7 +7,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Master />} />
       <Route
-        path="/7_contractPhotography"
+        path="/screen/7"
         element={<ContractPhotography />}
       />
     </Routes>

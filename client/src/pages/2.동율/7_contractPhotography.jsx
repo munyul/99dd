@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router'
 
 const ROUTE_PATHS = {
   home: '/',
-  upload: '/8_fileUpload',
-  ocrProgress: '/9_ocrProgress',
+  upload: '/screen/8',
+  ocrProgress: '/screen/9',
 }
 
 const ICON_PATHS = {
