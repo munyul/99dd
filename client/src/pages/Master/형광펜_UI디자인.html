@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>형광펜 — Highlight Before You Sign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<style>
+:root{
+  --yellow:#D9FF3F;
+  --yellow-soft:rgba(217,255,63,.35);
+  --yellow-soft2:rgba(217,255,63,.55);
+  --ink:#191919;
+  --ink-2:#4B4B4F;
+  --ink-3:#8A8A8E;
+  --line:#EFEFEF;
+  --line-2:#E4E4E6;
+  --white:#FFFFFF;
+  --bg:#FAFAF9;
+  --safe:#2FBE5C;
+  --safe-bg:#EAFBEF;
+  --caution:#FF9F0A;
+  --caution-bg:#FFF5E5;
+  --danger:#FF3B30;
+  --danger-bg:#FFECEB;
+  --r-card:20px;
+  --r-btn:18px;
+  --r-chip:100px;
+  --shadow:0 8px 24px rgba(20,20,20,.06), 0 2px 6px rgba(20,20,20,.04);
+  --shadow-lg:0 16px 40px rgba(20,20,20,.12), 0 4px 12px rgba(20,20,20,.06);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+  font-family:'Nanum Gothic', sans-serif;
+  background:#EDEDED;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+.msr{font-family:'Material Symbols Rounded'; font-weight:400; font-style:normal; font-size:24px; line-height:1; letter-spacing:normal; text-transform:none; display:inline-block; white-space:nowrap; word-wrap:normal; direction:ltr; -webkit-font-feature-settings:'liga'; -webkit-font-smoothing:antialiased; vertical-align:middle;}
+.fill{font-variation-settings:'FILL' 1;}
+
+/* ===== Gallery layout ===== */
+.gallery-header{
+  padding:56px 40px 32px;
+  background:var(--ink);
+  color:var(--white);
+}
+.gallery-header h1{font-size:34px; font-weight:800;}
+.gallery-header .tag{color:var(--yellow); font-weight:700; margin-top:6px; font-size:16px;}
+.gallery-header p{color:#B9B9BD; margin-top:14px; font-size:14px; max-width:640px; line-height:1.6;}
+.gallery{
+  display:flex;
+  flex-wrap:wrap;
+  gap:44px;
+  padding:44px;
+}
+.frame-wrap{display:flex; flex-direction:column; align-items:center; gap:14px;}
+.frame-label{font-size:13px; font-weight:700; color:#555; background:#fff; padding:6px 14px; border-radius:100px; box-shadow:var(--shadow);}
+.frame-label b{color:var(--ink); }
+.frame-label span{color:var(--ink-3); font-weight:400;}
+
+.phone{
+  width:390px; height:844px;
+  background:var(--white);
+  border-radius:55px;
+  border:10px solid #111;
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+  position:relative;
+  flex-shrink:0;
+}
+.screen{
+  width:100%; height:100%;
+  display:flex; flex-direction:column;
+  background:var(--white);
+  position:relative;
+  overflow:hidden;
+}
+.notch{
+  position:absolute; top:10px; left:50%; transform:translateX(-50%);
+  width:120px; height:28px; background:#111; border-radius:20px; z-index:50;
+}
+.statusbar{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:18px 28px 4px; font-size:15px; font-weight:700; color:var(--ink); flex-shrink:0;
+}
+.statusbar .icons{display:flex; gap:5px; align-items:center;}
+
+.content{flex:1; overflow-y:auto; padding:0 20px 20px;}
+.content::-webkit-scrollbar{display:none;}
+
+/* ===== Top nav ===== */
+.topnav{display:flex; align-items:center; justify-content:space-between; padding:6px 4px 18px;}
+.topnav .back{width:36px; height:36px; border-radius:12px; background:#F5F5F4; display:flex; align-items:center; justify-content:center;}
+.topnav .title{font-size:17px; font-weight:800;}
+.topnav .right{width:36px; height:36px; display:flex; align-items:center; justify-content:center;}
+
+/* ===== Bottom nav ===== */
+.bottomnav{
+  display:flex; justify-content:space-around; align-items:center;
+  padding:10px 8px calc(10px + 20px);
+  border-top:1px solid var(--line);
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(10px);
+  flex-shrink:0;
+}
+.navitem{display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--ink-3); font-size:11px; font-weight:700; width:60px;}
+.navitem.active{color:var(--ink);}
+.navitem .msr{font-size:24px;}
+.navitem.active .msr{font-variation-settings:'FILL' 1;}
+.navitem.active .dot{width:4px; height:4px; border-radius:50%; background:var(--yellow); margin-top:-1px;}
+
+/* ===== Buttons ===== */
+.btn{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  border:none; cursor:pointer;
+  font-family:'Nanum Gothic'; font-weight:800; font-size:16px;
+  border-radius:var(--r-btn);
+  padding:17px 20px;
+  width:100%;
+}
+.btn-primary{background:var(--yellow); color:var(--ink);}
+.btn-secondary{background:var(--ink); color:var(--white);}
+.btn-ghost{background:#F5F5F4; color:var(--ink);}
+.btn-outline{background:var(--white); color:var(--ink); border:1.5px solid var(--line-2);}
+.btn-sm{padding:11px 16px; font-size:13px; border-radius:14px; width:auto;}
+.btn:disabled, .btn.disabled{background:#F0F0EF; color:var(--ink-3);}
+
+/* ===== Card ===== */
+.card{
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:var(--r-card);
+  box-shadow:var(--shadow);
+  padding:20px;
+}
+.card-flat{background:#F7F7F6; border-radius:var(--r-card); padding:20px;}
+
+/* ===== Badge ===== */
+.badge{display:inline-flex; align-items:center; gap:5px; padding:6px 12px; border-radius:100px; font-size:12px; font-weight:800;}
+.badge .msr{font-size:15px;}
+.badge-safe{background:var(--safe-bg); color:var(--safe);}
+.badge-caution{background:var(--caution-bg); color:var(--caution);}
+.badge-danger{background:var(--danger-bg); color:var(--danger);}
+.badge-neutral{background:#F0F0EF; color:var(--ink-2);}
+
+/* ===== Chip ===== */
+.chip{display:inline-flex; align-items:center; gap:6px; padding:9px 15px; border-radius:var(--r-chip); font-size:13px; font-weight:700; background:#F5F5F4; color:var(--ink-2); border:1px solid transparent;}
+.chip.active{background:var(--ink); color:var(--white);}
+.chip.yellow{background:var(--yellow); color:var(--ink);}
+
+/* ===== Progress ===== */
+.progress-track{width:100%; height:8px; background:#F0F0EF; border-radius:100px; overflow:hidden;}
+.progress-fill{height:100%; background:var(--yellow); border-radius:100px;}
+.progress-fill.dark{background:var(--ink);}
+
+/* ===== Inputs ===== */
+.input{width:100%; border:1.5px solid var(--line-2); border-radius:14px; padding:16px 16px; font-family:'Nanum Gothic'; font-size:15px; color:var(--ink); background:var(--white);}
+.input::placeholder{color:var(--ink-3);}
+.input-label{font-size:12px; font-weight:800; color:var(--ink-2); margin-bottom:8px; display:block;}
+
+/* ===== Highlight ===== */
+.hl{
+  position:relative; padding:1px 3px; font-weight:700; color:var(--ink);
+  background:linear-gradient(180deg, transparent 58%, var(--yellow-soft2) 58%, var(--yellow-soft2) 95%, transparent 95%);
+  box-decoration-break:clone; -webkit-box-decoration-break:clone;
+}
+.hl-danger{background:linear-gradient(180deg, transparent 58%, rgba(255,59,48,.28) 58%, rgba(255,59,48,.28) 95%, transparent 95%);}
+.hl-caution{background:linear-gradient(180deg, transparent 58%, rgba(255,159,10,.30) 58%, rgba(255,159,10,.30) 95%, transparent 95%);}
+.hl-draw{
+  background-size:0% 100%;
+  background-repeat:no-repeat;
+  background-image:linear-gradient(180deg, transparent 58%, var(--yellow-soft2) 58%, var(--yellow-soft2) 95%, transparent 95%);
+  animation:draw 1.6s ease forwards;
+  animation-delay:.3s;
+}
+.hl-draw.danger{background-image:linear-gradient(180deg, transparent 58%, rgba(255,59,48,.32) 58%, rgba(255,59,48,.32) 95%, transparent 95%);}
+.hl-draw.caution{background-image:linear-gradient(180deg, transparent 58%, rgba(255,159,10,.34) 58%, rgba(255,159,10,.34) 95%, transparent 95%);}
+@keyframes draw{ from{background-size:0% 100%;} to{background-size:100% 100%;} }
+
+/* ===== Risk Gauge ===== */
+.gauge{position:relative; width:220px; height:220px; margin:0 auto;}
+.gauge svg{transform:rotate(-90deg);}
+.gauge-center{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+.gauge-center .num{font-size:44px; font-weight:800;}
+.gauge-center .lbl{font-size:13px; font-weight:700; color:var(--ink-3); margin-top:2px;}
+
+/* ===== Section label ===== */
+.sec-label{font-size:12px; font-weight:800; color:var(--ink-3); text-transform:uppercase; letter-spacing:.5px; margin:22px 0 10px;}
+
+/* ===== Dialog / Sheet / Toast ===== */
+.dialog{background:var(--white); border-radius:24px; padding:26px 22px; box-shadow:var(--shadow-lg); width:280px;}
+.sheet{background:var(--white); border-radius:28px 28px 0 0; padding:14px 20px 24px; box-shadow:0 -8px 30px rgba(0,0,0,.1);}
+.sheet .handle{width:36px; height:5px; background:var(--line-2); border-radius:100px; margin:0 auto 16px;}
+.toast{display:flex; align-items:center; gap:10px; background:var(--ink); color:var(--white); padding:14px 18px; border-radius:16px; font-size:13px; font-weight:700; box-shadow:var(--shadow-lg);}
+
+/* helper */
+.row{display:flex; align-items:center;}
+.between{justify-content:space-between;}
+.gap8{gap:8px;} .gap10{gap:10px;} .gap12{gap:12px;} .gap16{gap:16px;}
+.mt8{margin-top:8px;} .mt12{margin-top:12px;} .mt16{margin-top:16px;} .mt20{margin-top:20px;} .mt24{margin-top:24px;} .mt32{margin-top:32px;}
+.tc{color:var(--ink-3);} .tc2{color:var(--ink-2);}
+.fw8{font-weight:800;} .fw7{font-weight:700;}
+.f11{font-size:11px;} .f12{font-size:12px;} .f13{font-size:13px;} .f14{font-size:14px;} .f15{font-size:15px;} .f16{font-size:16px;} .f18{font-size:18px;} .f20{font-size:20px;} .f22{font-size:22px;} .f26{font-size:26px;}
+.center{text-align:center;}
+.avatar{width:44px; height:44px; border-radius:50%; background:#F0F0EF; display:flex; align-items:center; justify-content:center;}
+.iconbox{width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<div class="gallery-header">
+  <h1>🖍 형광펜</h1>
+  <div class="tag">Highlight Before You Sign — 서명하기 전에, 형광펜으로 확인하세요</div>
+  <p>아르바이트생·사회초년생을 위한 근로계약서 AI 분석 서비스. iPhone 16 Pro (390×844) 기준, Apple HIG 스타일의 미니멀 UI. 총 20개 화면 + 디자인 시스템.</p>
+</div>
+
+<div class="gallery">
+
+<!-- ============ 01 SPLASH ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>01</b> <span>Splash</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen" style="background:var(--ink); align-items:center; justify-content:center; display:flex;">
+    <div style="text-align:center;">
+      <div style="width:96px;height:96px;border-radius:28px;background:var(--yellow);display:flex;align-items:center;justify-content:center;margin:0 auto;">
+        <span class="msr fill" style="font-size:52px; color:var(--ink);">stylus_note</span>
+      </div>
+      <div style="color:var(--white); font-size:28px; font-weight:800; margin-top:22px;">형광펜</div>
+      <div style="color:var(--yellow); font-size:13px; font-weight:700; margin-top:8px; letter-spacing:.3px;">HIGHLIGHT BEFORE YOU SIGN</div>
+    </div>
+    <div style="position:absolute; bottom:56px; left:0; right:0; text-align:center;">
+      <div style="width:120px;height:4px;background:#333;border-radius:100px;margin:0 auto; overflow:hidden;"><div style="width:70%;height:100%;background:var(--yellow);"></div></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 02 ONBOARDING 1 ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>02</b> <span>온보딩 1</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 32px;">
+      <div style="width:220px;height:220px;border-radius:32px;background:#F7F7F6; display:flex; align-items:center; justify-content:center; position:relative;">
+        <span class="msr" style="font-size:90px; color:var(--ink);">photo_camera</span>
+        <div style="position:absolute; bottom:24px; right:24px; width:44px; height:44px; border-radius:14px; background:var(--yellow); display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow);">
+          <span class="msr" style="font-size:22px;">auto_awesome</span>
+        </div>
+      </div>
+      <div class="f22 fw8 center mt32" style="line-height:1.4;">계약서, <span class="hl">촬영만 하면</span><br/>끝이에요</div>
+      <div class="f14 tc center mt12" style="line-height:1.6;">사진 한 장이면 AI가 알아서<br/>계약서 내용을 읽어드려요</div>
+    </div>
+    <div style="padding:0 24px 8px;">
+      <div class="row" style="justify-content:center; gap:8px; margin-bottom:24px;">
+        <div style="width:22px;height:8px;border-radius:100px;background:var(--ink);"></div>
+        <div style="width:8px;height:8px;border-radius:100px;background:var(--line-2);"></div>
+        <div style="width:8px;height:8px;border-radius:100px;background:var(--line-2);"></div>
+      </div>
+      <button class="btn btn-secondary">다음 <span class="msr" style="font-size:18px;">arrow_forward</span></button>
+      <div class="center f13 fw7 tc mt16" style="padding-bottom:8px;">건너뛰기</div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 03 ONBOARDING 2 ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>03</b> <span>온보딩 2</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 32px;">
+      <div style="width:220px;height:220px;border-radius:32px;background:#F7F7F6; display:flex; align-items:center; justify-content:center;">
+        <div style="font-size:15px; line-height:2; font-weight:700; color:var(--ink-2);">
+          제 3조 (근로시간)<br/>
+          <span class="hl-danger">근로자는 회사의 요청 시<br/>추가 수당 없이 연장근무</span><br/>
+          제 5조 (계약해지)
+        </div>
+      </div>
+      <div class="f22 fw8 center mt32" style="line-height:1.4;">위험한 조항은<br/><span class="hl-danger">형광펜으로</span> 딱 표시</div>
+      <div class="f14 tc center mt12" style="line-height:1.6;">최저임금 위반, 주휴수당 누락 같은<br/>독소조항을 AI가 콕 짚어드려요</div>
+    </div>
+    <div style="padding:0 24px 8px;">
+      <div class="row" style="justify-content:center; gap:8px; margin-bottom:24px;">
+        <div style="width:8px;height:8px;border-radius:100px;background:var(--line-2);"></div>
+        <div style="width:22px;height:8px;border-radius:100px;background:var(--ink);"></div>
+        <div style="width:8px;height:8px;border-radius:100px;background:var(--line-2);"></div>
+      </div>
+      <button class="btn btn-secondary">다음 <span class="msr" style="font-size:18px;">arrow_forward</span></button>
+      <div class="center f13 fw7 tc mt16" style="padding-bottom:8px;">건너뛰기</div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 04 ONBOARDING 3 ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>04</b> <span>온보딩 3</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 32px;">
+      <div style="width:220px;height:220px;border-radius:32px;background:#F7F7F6; display:flex; align-items:center; justify-content:center;">
+        <span class="msr" style="font-size:90px; color:var(--ink);">support_agent</span>
+      </div>
+      <div class="f22 fw8 center mt32" style="line-height:1.4;">궁금하면 <span class="hl">노무사 상담</span>까지<br/>한번에</div>
+      <div class="f14 tc center mt12" style="line-height:1.6;">노동청 신고, 노무사 무료 상담까지<br/>바로 연결해드려요</div>
+    </div>
+    <div style="padding:0 24px 8px;">
+      <div class="row" style="justify-content:center; gap:8px; margin-bottom:24px;">
+        <div style="width:8px;height:8px;border-radius:100px;background:var(--line-2);"></div>
+        <div style="width:8px;height:8px;border-radius:100px;background:var(--line-2);"></div>
+        <div style="width:22px;height:8px;border-radius:100px;background:var(--ink);"></div>
+      </div>
+      <button class="btn btn-primary">시작하기 <span class="msr" style="font-size:18px;">arrow_forward</span></button>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 05 LOGIN ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>05</b> <span>로그인</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div style="flex:1; display:flex; flex-direction:column; padding:40px 28px 0;">
+      <div style="width:64px;height:64px;border-radius:20px;background:var(--yellow); display:flex; align-items:center; justify-content:center;">
+        <span class="msr fill" style="font-size:34px;">stylus_note</span>
+      </div>
+      <div class="f26 fw8 mt24" style="line-height:1.4;">서명하기 전에,<br/>형광펜으로 먼저<br/>확인해보세요</div>
+      <div class="f14 tc mt12">3초면 로그인 끝, 계약서 분석까지<br/>1분이면 충분해요</div>
+    </div>
+    <div style="padding:24px 28px 8px; display:flex; flex-direction:column; gap:12px;">
+      <button class="btn" style="background:#FEE500; color:#191919;"><span class="msr" style="font-size:20px;">chat_bubble</span> 카카오로 시작하기</button>
+      <button class="btn btn-secondary"><span class="msr" style="font-size:20px;">apple</span> Apple로 시작하기</button>
+      <button class="btn btn-outline"><span class="msr" style="font-size:20px;">mail</span> 이메일로 시작하기</button>
+      <div class="center f12 tc mt12">가입 시 <u>이용약관</u> 및 <u>개인정보처리방침</u>에 동의해요</div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 06 HOME ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>06</b> <span>홈</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div class="content">
+      <div class="row between" style="padding:14px 4px 4px;">
+        <div>
+          <div class="f13 tc fw7">안녕하세요 👋</div>
+          <div class="f20 fw8 mt8">지민 님</div>
+        </div>
+        <div class="avatar"><span class="msr" style="font-size:22px;">notifications</span></div>
+      </div>
+
+      <div class="mt20" style="background:var(--ink); border-radius:var(--r-card); padding:22px; position:relative; overflow:hidden;">
+        <div style="position:absolute; right:-20px; top:-20px; width:120px; height:120px; background:var(--yellow-soft); border-radius:50%; filter:blur(2px);"></div>
+        <div class="f13 fw7" style="color:var(--yellow);">지금 바로 확인하세요</div>
+        <div class="f18 fw8 mt8" style="color:#fff; line-height:1.4;">계약서 서명 전,<br/>1분만 투자해보세요</div>
+        <button class="btn btn-primary btn-sm mt16">분석 시작 <span class="msr" style="font-size:16px;">arrow_forward</span></button>
+      </div>
+
+      <div class="row gap12 mt20">
+        <div class="card" style="flex:1; padding:18px;">
+          <div class="iconbox" style="background:var(--yellow-soft);"><span class="msr">photo_camera</span></div>
+          <div class="f15 fw8 mt12">계약서 촬영</div>
+          <div class="f12 tc mt8">카메라로 바로 찍기</div>
+        </div>
+        <div class="card" style="flex:1; padding:18px;">
+          <div class="iconbox" style="background:#F0F0EF;"><span class="msr">upload_file</span></div>
+          <div class="f15 fw8 mt12">파일 업로드</div>
+          <div class="f12 tc mt8">PDF·이미지 올리기</div>
+        </div>
+      </div>
+
+      <div class="row between" style="align-items:flex-end;">
+        <div class="sec-label" style="margin-bottom:0;">최근 분석 내역</div>
+        <div class="f12 fw7 tc">전체보기</div>
+      </div>
+
+      <div class="card mt12" style="padding:16px;">
+        <div class="row between">
+          <div class="row gap10">
+            <div class="iconbox" style="background:var(--danger-bg); width:40px; height:40px;"><span class="msr" style="color:var(--danger); font-size:20px;">description</span></div>
+            <div>
+              <div class="f14 fw8">알바몬 카페 근로계약서</div>
+              <div class="f12 tc mt8">2026.07.26 · 위험 3건</div>
+            </div>
+          </div>
+          <span class="badge badge-danger">위험</span>
+        </div>
+      </div>
+      <div class="card mt12" style="padding:16px;">
+        <div class="row between">
+          <div class="row gap10">
+            <div class="iconbox" style="background:var(--safe-bg); width:40px; height:40px;"><span class="msr" style="color:var(--safe); font-size:20px;">description</span></div>
+            <div>
+              <div class="f14 fw8">스타트업 인턴 계약서</div>
+              <div class="f12 tc mt8">2026.07.20 · 이상없음</div>
+            </div>
+          </div>
+          <span class="badge badge-safe">안전</span>
+        </div>
+      </div>
+    </div>
+    <div class="bottomnav">
+      <div class="navitem active"><span class="msr fill">home</span>홈<div class="dot"></div></div>
+      <div class="navitem"><span class="msr">photo_camera</span>촬영</div>
+      <div class="navitem"><span class="msr">folder</span>내역</div>
+      <div class="navitem"><span class="msr">notifications</span>알림</div>
+      <div class="navitem"><span class="msr">person</span>마이</div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 07 CAPTURE ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>07</b> <span>계약서 촬영</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen" style="background:#0B0B0B;">
+    <div class="statusbar" style="color:#fff;"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div class="row between" style="padding:10px 20px;">
+      <span class="msr" style="color:#fff; font-size:26px;">close</span>
+      <span class="f14 fw8" style="color:#fff;">계약서 촬영</span>
+      <span class="msr" style="color:#fff; font-size:26px;">flash_off</span>
+    </div>
+    <div style="flex:1; position:relative; display:flex; align-items:center; justify-content:center;">
+      <div style="width:330px; height:460px; border:3px solid var(--yellow); border-radius:20px; position:relative;">
+        <div style="position:absolute; top:-3px; left:-3px; width:34px; height:34px; border-top:6px solid var(--yellow); border-left:6px solid var(--yellow); border-radius:16px 0 0 0;"></div>
+        <div style="position:absolute; top:-3px; right:-3px; width:34px; height:34px; border-top:6px solid var(--yellow); border-right:6px solid var(--yellow); border-radius:0 16px 0 0;"></div>
+        <div style="position:absolute; bottom:-3px; left:-3px; width:34px; height:34px; border-bottom:6px solid var(--yellow); border-left:6px solid var(--yellow); border-radius:0 0 0 16px;"></div>
+        <div style="position:absolute; bottom:-3px; right:-3px; width:34px; height:34px; border-bottom:6px solid var(--yellow); border-right:6px solid var(--yellow); border-radius:0 0 16px 0;"></div>
+      </div>
+      <div style="position:absolute; bottom:36px; background:rgba(0,0,0,.55); color:#fff; padding:9px 18px; border-radius:100px; font-size:13px; font-weight:700;">계약서 전체가 잘 보이게 맞춰주세요</div>
+    </div>
+    <div style="padding:20px 20px 44px; display:flex; align-items:center; justify-content:space-between;">
+      <div style="width:44px;height:44px;border-radius:12px; background:#2A2A2A; display:flex; align-items:center; justify-content:center;"><span class="msr" style="color:#fff;">image</span></div>
+      <div style="width:78px;height:78px;border-radius:50%; background:#fff; border:5px solid #555; display:flex; align-items:center; justify-content:center;"></div>
+      <div style="width:44px;height:44px;border-radius:12px; background:#2A2A2A; display:flex; align-items:center; justify-content:center;"><span class="msr" style="color:#fff;">cameraswitch</span></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 08 FILE UPLOAD ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>08</b> <span>파일 업로드</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div class="topnav"><div class="back"><span class="msr">close</span></div><div class="title">파일 업로드</div><div class="right"></div></div>
+    <div class="content">
+      <div style="border:2px dashed var(--line-2); border-radius:var(--r-card); padding:44px 20px; text-align:center; background:#FAFAF9;">
+        <div style="width:60px;height:60px;border-radius:18px;background:var(--yellow-soft); display:flex; align-items:center; justify-content:center; margin:0 auto;">
+          <span class="msr" style="font-size:30px;">upload_file</span>
+        </div>
+        <div class="f15 fw8 mt16">여기를 눌러 파일을 선택하세요</div>
+        <div class="f12 tc mt8">PDF, JPG, PNG · 최대 20MB</div>
+        <button class="btn btn-secondary btn-sm mt20" style="margin:20px auto 0;">파일 선택하기</button>
+      </div>
+
+      <div class="sec-label">선택된 파일</div>
+      <div class="card" style="padding:14px;">
+        <div class="row between">
+          <div class="row gap10">
+            <div class="iconbox" style="background:var(--danger-bg); width:40px; height:40px;"><span class="msr" style="color:var(--danger); font-size:18px;">picture_as_pdf</span></div>
+            <div>
+              <div class="f14 fw8">근로계약서_카페알바.pdf</div>
+              <div class="f12 tc mt8">2.4MB</div>
+            </div>
+          </div>
+          <span class="msr" style="color:var(--ink-3);">close</span>
+        </div>
+      </div>
+    </div>
+    <div style="padding:16px 20px 40px;">
+      <button class="btn btn-primary">분석 시작하기</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 09 OCR PROGRESS ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>09</b> <span>OCR 진행</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 30px;">
+      <div style="width:230px; height:300px; background:#F7F7F6; border-radius:16px; position:relative; overflow:hidden; box-shadow:var(--shadow);">
+        <div style="padding:22px 18px; display:flex; flex-direction:column; gap:10px;">
+          <div style="height:9px; width:70%; background:#E4E4E2; border-radius:4px;"></div>
+          <div style="height:9px; width:90%; background:#E4E4E2; border-radius:4px;"></div>
+          <div style="height:9px; width:55%; background:#E4E4E2; border-radius:4px;"></div>
+          <div style="height:9px; width:80%; background:#E4E4E2; border-radius:4px;"></div>
+          <div style="height:9px; width:65%; background:#E4E4E2; border-radius:4px;"></div>
+          <div style="height:9px; width:88%; background:#E4E4E2; border-radius:4px;"></div>
+          <div style="height:9px; width:40%; background:#E4E4E2; border-radius:4px;"></div>
+        </div>
+        <div style="position:absolute; left:0; right:0; top:60%; height:3px; background:var(--yellow); box-shadow:0 0 16px 3px var(--yellow-soft2);"></div>
+      </div>
+      <div class="f18 fw8 mt32">글자를 읽고 있어요</div>
+      <div class="f13 tc mt8 center">계약서 이미지를 텍스트로<br/>변환하는 중이에요</div>
+      <div style="width:100%; margin-top:28px;">
+        <div class="progress-track"><div class="progress-fill" style="width:64%;"></div></div>
+        <div class="f12 tc mt8 center">64%</div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 10 OCR REVIEW ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>10</b> <span>OCR 검토</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div class="topnav"><div class="back"><span class="msr">arrow_back</span></div><div class="title">인식된 내용 확인</div><div class="right"></div></div>
+    <div class="content">
+      <div class="card-flat row gap10" style="align-items:flex-start;">
+        <span class="msr" style="color:var(--ink-2); font-size:20px;">info</span>
+        <div class="f12 tc2" style="line-height:1.6;">틀리게 인식된 부분이 있다면 직접 고쳐주세요. 정확할수록 분석이 정확해져요.</div>
+      </div>
+
+      <div class="sec-label">회사명</div>
+      <input class="input" value="㈜모카커피" />
+
+      <div class="sec-label">근무 시작일</div>
+      <input class="input" value="2026년 08월 01일" />
+
+      <div class="sec-label">시급</div>
+      <input class="input" value="9,860원" />
+
+      <div class="sec-label">계약서 전문</div>
+      <textarea class="input" rows="6" style="resize:none; line-height:1.7;">제3조(근로시간) 근로자의 근무시간은 09:00~18:00로 한다. 회사의 필요에 따라 근로자는 추가 수당 없이 연장 근무를 할 수 있다.
+제4조(임금) 시급 9,860원을 지급하며 주휴수당은 별도 지급하지 않는다.</textarea>
+    </div>
+    <div style="padding:16px 20px 40px;">
+      <button class="btn btn-primary">이대로 분석하기</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 11 AI ANALYZING ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>11</b> <span>AI 분석 중</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 34px;">
+      <div style="width:120px; height:120px; border-radius:50%; background:var(--yellow-soft); display:flex; align-items:center; justify-content:center; position:relative;">
+        <div style="width:88px; height:88px; border-radius:50%; background:var(--yellow); display:flex; align-items:center; justify-content:center;">
+          <span class="msr fill" style="font-size:40px;">neurology</span>
+        </div>
+      </div>
+      <div class="f18 fw8 mt32">AI가 계약서를<br/>꼼꼼히 살펴보고 있어요</div>
+      <div style="width:100%; margin-top:32px; display:flex; flex-direction:column; gap:14px;">
+        <div class="row gap10"><span class="msr" style="color:var(--safe); font-size:22px;">check_circle</span><div class="f14 fw7">텍스트 인식 완료</div></div>
+        <div class="row gap10"><span class="msr" style="color:var(--safe); font-size:22px;">check_circle</span><div class="f14 fw7">근로기준법 대조 완료</div></div>
+        <div class="row gap10"><span class="msr" style="font-size:22px; color:var(--ink);">progress_activity</span><div class="f14 fw8">독소조항 탐지 중...</div></div>
+        <div class="row gap10" style="opacity:.35;"><span class="msr" style="font-size:22px;">radio_button_unchecked</span><div class="f14 fw7">수정 제안 생성</div></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 12 RESULT (MAIN) ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>12</b> <span>분석 결과 ★ 핵심 화면</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div class="topnav"><div class="back"><span class="msr">arrow_back</span></div><div class="title">분석 결과</div><div class="right"><span class="msr">ios_share</span></div></div>
+    <div class="content">
+      <div class="card" style="background:var(--danger-bg); border-color:transparent; padding:20px;">
+        <div class="row between">
+          <div>
+            <div class="f13 fw8" style="color:var(--danger);">⚠️ 위험한 계약서예요</div>
+            <div class="f20 fw8 mt8">독소조항 3건 발견</div>
+          </div>
+          <div style="width:56px;height:56px;border-radius:50%; background:var(--danger); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:20px;">32</div>
+        </div>
+      </div>
+
+      <div class="row gap8 mt16">
+        <div class="chip active">전체 6</div>
+        <div class="chip" style="color:var(--danger); border-color:var(--danger-bg); background:var(--danger-bg);">위험 3</div>
+        <div class="chip" style="color:var(--caution); border-color:var(--caution-bg); background:var(--caution-bg);">주의 2</div>
+        <div class="chip" style="color:var(--safe); border-color:var(--safe-bg); background:var(--safe-bg);">안전 1</div>
+      </div>
+
+      <div class="sec-label">형광펜으로 표시된 계약서</div>
+      <div class="card" style="line-height:2.1; font-size:14.5px;">
+        제3조(근로시간) 근로자의 근무시간은 09:00~18:00로 한다. 회사의 필요에 따라 <span class="hl-draw danger">근로자는 추가 수당 없이 연장 근무를 할 수 있다</span>.<br/>
+        제4조(임금) 시급 9,860원을 지급하며 <span class="hl-draw danger">주휴수당은 별도 지급하지 않는다</span>.<br/>
+        제7조(손해배상) <span class="hl-draw caution">근로자의 귀책 사유 발생 시 월 급여의 3배를 배상한다</span>.
+      </div>
+
+      <div class="sec-label">발견된 조항</div>
+      <div class="card mt12" style="padding:16px;">
+        <div class="row between">
+          <div class="row gap10">
+            <span class="msr" style="color:var(--danger);">warning</span>
+            <div>
+              <div class="f14 fw8">연장근무 수당 미지급</div>
+              <div class="f12 tc mt8">근로기준법 제56조 위반 소지</div>
+            </div>
+          </div>
+          <span class="msr" style="color:var(--ink-3);">chevron_right</span>
+        </div>
+      </div>
+      <div class="card mt12" style="padding:16px;">
+        <div class="row between">
+          <div class="row gap10">
+            <span class="msr" style="color:var(--danger);">warning</span>
+            <div>
+              <div class="f14 fw8">주휴수당 누락</div>
+              <div class="f12 tc mt8">주 15시간 이상 근무 시 지급 의무</div>
+            </div>
+          </div>
+          <span class="msr" style="color:var(--ink-3);">chevron_right</span>
+        </div>
+      </div>
+      <div class="card mt12" style="padding:16px;">
+        <div class="row between">
+          <div class="row gap10">
+            <span class="msr" style="color:var(--caution);">error</span>
+            <div>
+              <div class="f14 fw8">과도한 손해배상 조항</div>
+              <div class="f12 tc mt8">위약금 예정 금지 원칙 위반 소지</div>
+            </div>
+          </div>
+          <span class="msr" style="color:var(--ink-3);">chevron_right</span>
+        </div>
+      </div>
+    </div>
+    <div style="padding:16px 20px 40px; display:flex; gap:10px;">
+      <button class="btn btn-outline" style="flex:1;">수정 제안 보기</button>
+      <button class="btn btn-primary" style="flex:1.3;">전문가 상담</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 13 RISK SCORE ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>13</b> <span>위험도 점수</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div class="topnav"><div class="back"><span class="msr">arrow_back</span></div><div class="title">위험도 점수</div><div class="right"></div></div>
+    <div class="content center">
+      <div class="gauge mt24">
+        <svg width="220" height="220" viewBox="0 0 220 220">
+          <circle cx="110" cy="110" r="95" stroke="#F0F0EF" stroke-width="18" fill="none"/>
+          <circle cx="110" cy="110" r="95" stroke="#FF3B30" stroke-width="18" fill="none" stroke-linecap="round" stroke-dasharray="597" stroke-dashoffset="192"/>
+        </svg>
+        <div class="gauge-center">
+          <div class="num" style="color:var(--danger);">32<span style="font-size:20px;">점</span></div>
+          <div class="lbl">100점 만점 · 위험</div>
+        </div>
+      </div>
+      <div class="badge badge-danger mt16" style="padding:9px 16px;">이 계약서는 서명을 다시 검토하세요</div>
+
+      <div style="text-align:left; margin-top:32px;">
+        <div class="sec-label">항목별 점수</div>
+        <div class="card" style="padding:18px;">
+          <div class="f13 fw8">임금 · 수당</div>
+          <div class="row between mt8"><div class="progress-track" style="flex:1; margin-right:12px;"><div class="progress-fill" style="width:20%; background:var(--danger);"></div></div><div class="f13 fw8" style="color:var(--danger);">20</div></div>
+        </div>
+        <div class="card mt12" style="padding:18px;">
+          <div class="f13 fw8">근로시간</div>
+          <div class="row between mt8"><div class="progress-track" style="flex:1; margin-right:12px;"><div class="progress-fill" style="width:45%; background:var(--caution);"></div></div><div class="f13 fw8" style="color:var(--caution);">45</div></div>
+        </div>
+        <div class="card mt12" style="padding:18px;">
+          <div class="f13 fw8">손해배상 · 위약금</div>
+          <div class="row between mt8"><div class="progress-track" style="flex:1; margin-right:12px;"><div class="progress-fill" style="width:38%; background:var(--caution);"></div></div><div class="f13 fw8" style="color:var(--caution);">38</div></div>
+        </div>
+        <div class="card mt12" style="padding:18px;">
+          <div class="f13 fw8">계약 해지 조건</div>
+          <div class="row between mt8"><div class="progress-track" style="flex:1; margin-right:12px;"><div class="progress-fill" style="width:82%; background:var(--safe);"></div></div><div class="f13 fw8" style="color:var(--safe);">82</div></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 14 TOXIC CLAUSE DETAIL ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>14</b> <span>독소조항 상세보기</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div class="topnav"><div class="back"><span class="msr">arrow_back</span></div><div class="title">조항 상세</div><div class="right"></div></div>
+    <div class="content">
+      <span class="badge badge-danger">위험 · 임금 관련</span>
+      <div class="f18 fw8 mt16">연장근무 수당 미지급</div>
+
+      <div class="sec-label">원문</div>
+      <div class="card-flat">
+        <div class="f14" style="line-height:1.9;">제3조(근로시간) ... 회사의 필요에 따라 <span class="hl-danger">근로자는 추가 수당 없이 연장 근무를 할 수 있다</span>.</div>
+      </div>
+
+      <div class="sec-label">쉬운 설명</div>
+      <div class="card" style="border-left:4px solid var(--ink);">
+        <div class="f14" style="line-height:1.8;">회사가 시키면 <b>초과근무를 해도 추가 수당을 못 받을 수도 있다</b>는 뜻이에요. 법적으로는 연장근무 시 <b>통상임금의 1.5배</b>를 받아야 해요.</div>
+      </div>
+
+      <div class="sec-label">관련 법령</div>
+      <div class="card-flat row gap10">
+        <span class="msr" style="color:var(--ink-2);">gavel</span>
+        <div class="f13 tc2" style="line-height:1.7;">근로기준법 제56조(연장·야간 및 휴일 근로)<br/>연장근로에 대하여는 통상임금의 100분의 50 이상을 가산하여 지급해야 합니다.</div>
+      </div>
+
+      <div class="sec-label">위험도</div>
+      <div class="card row between" style="padding:16px;">
+        <div class="f13 fw8">서명 시 불이익 가능성</div>
+        <div class="row gap8"><span class="msr" style="color:var(--danger);">priority_high</span><span class="f13 fw8" style="color:var(--danger);">매우 높음</span></div>
+      </div>
+    </div>
+    <div style="padding:16px 20px 40px;">
+      <button class="btn btn-primary">이 조항 수정 제안 보기</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 15 SUGGESTION ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>15</b> <span>수정 제안</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div class="topnav"><div class="back"><span class="msr">arrow_back</span></div><div class="title">수정 제안</div><div class="right"></div></div>
+    <div class="content">
+      <div class="row gap10">
+        <div style="flex:1; text-align:center; padding:10px; border-radius:12px; background:var(--danger-bg);">
+          <div class="f11 fw8" style="color:var(--danger);">현재 조항</div>
+        </div>
+        <span class="msr" style="color:var(--ink-3);">arrow_forward</span>
+        <div style="flex:1; text-align:center; padding:10px; border-radius:12px; background:var(--safe-bg);">
+          <div class="f11 fw8" style="color:var(--safe);">제안 조항</div>
+        </div>
+      </div>
+
+      <div class="sec-label">기존 문장</div>
+      <div class="card" style="border-left:4px solid var(--danger); padding:16px;">
+        <div class="f13" style="line-height:1.8; color:var(--ink-2);">"근로자는 추가 수당 없이 연장 근무를 할 수 있다"</div>
+      </div>
+
+      <div class="sec-label">이렇게 바꿔보세요</div>
+      <div class="card" style="border-left:4px solid var(--safe); padding:16px; background:#FBFFF9;">
+        <div class="f13 fw7" style="line-height:1.8;">"연장 근무 시 통상임금의 50%를 가산한 연장근로수당을 지급한다"</div>
+      </div>
+
+      <div class="card-flat row gap10 mt20">
+        <span class="msr" style="color:var(--ink-2);">lightbulb</span>
+        <div class="f12 tc2" style="line-height:1.7;">이 문장은 근로기준법 제56조를 기준으로 생성된 제안이에요. 회사와 협의 시 참고 자료로 활용해보세요.</div>
+      </div>
+    </div>
+    <div style="padding:16px 20px 40px; display:flex; gap:10px;">
+      <button class="btn btn-outline" style="flex:1;"><span class="msr" style="font-size:18px;">content_copy</span> 복사</button>
+      <button class="btn btn-primary" style="flex:1.4;"><span class="msr" style="font-size:18px;">ios_share</span> 회사에 공유하기</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 16 CONSULT ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>16</b> <span>노동청/노무사 상담</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div class="topnav"><div class="back"><span class="msr">arrow_back</span></div><div class="title">전문가 상담</div><div class="right"></div></div>
+    <div class="content">
+      <div class="f14 tc2 mt8" style="line-height:1.7;">혼자 판단하기 어렵다면<br/>전문가의 도움을 받아보세요</div>
+
+      <div class="card mt20" style="padding:18px;">
+        <div class="row gap12">
+          <div class="iconbox" style="background:var(--yellow-soft);"><span class="msr">support_agent</span></div>
+          <div style="flex:1;">
+            <div class="f15 fw8">노무사 무료 상담 연결</div>
+            <div class="f12 tc mt8">공인노무사와 1:1 채팅 상담</div>
+          </div>
+          <span class="msr" style="color:var(--ink-3);">chevron_right</span>
+        </div>
+      </div>
+
+      <div class="card mt12" style="padding:18px;">
+        <div class="row gap12">
+          <div class="iconbox" style="background:#F0F0EF;"><span class="msr">call</span></div>
+          <div style="flex:1;">
+            <div class="f15 fw8">고용노동부 상담센터</div>
+            <div class="f12 tc mt8">국번없이 1350 · 평일 9시~18시</div>
+          </div>
+          <span class="msr" style="color:var(--ink-3);">chevron_right</span>
+        </div>
+      </div>
+
+      <div class="card mt12" style="padding:18px;">
+        <div class="row gap12">
+          <div class="iconbox" style="background:#F0F0EF;"><span class="msr">edit_document</span></div>
+          <div style="flex:1;">
+            <div class="f15 fw8">노동청 진정서 작성 도움</div>
+            <div class="f12 tc mt8">분석 결과 기반 자동 작성</div>
+          </div>
+          <span class="msr" style="color:var(--ink-3);">chevron_right</span>
+        </div>
+      </div>
+
+      <div class="sec-label">자주 묻는 질문</div>
+      <div class="card-flat row between"><div class="f13 fw7">상담료가 있나요?</div><span class="msr" style="color:var(--ink-3); font-size:20px;">expand_more</span></div>
+      <div class="card-flat row between mt8"><div class="f13 fw7">상담 내용이 회사에 알려지나요?</div><span class="msr" style="color:var(--ink-3); font-size:20px;">expand_more</span></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 17 HISTORY ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>17</b> <span>분석 내역</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div class="content">
+      <div class="f22 fw8" style="padding:14px 4px 2px;">분석 내역</div>
+      <div class="row gap8 mt12">
+        <div class="chip active">전체</div>
+        <div class="chip">위험</div>
+        <div class="chip">주의</div>
+        <div class="chip">안전</div>
+      </div>
+
+      <div class="card mt16" style="padding:16px;">
+        <div class="row between">
+          <div class="row gap10">
+            <div class="iconbox" style="background:var(--danger-bg); width:40px; height:40px;"><span class="msr" style="color:var(--danger); font-size:20px;">description</span></div>
+            <div>
+              <div class="f14 fw8">알바몬 카페 근로계약서</div>
+              <div class="f12 tc mt8">2026.07.26 · 위험도 32점</div>
+            </div>
+          </div>
+          <span class="badge badge-danger">위험 3</span>
+        </div>
+      </div>
+      <div class="card mt12" style="padding:16px;">
+        <div class="row between">
+          <div class="row gap10">
+            <div class="iconbox" style="background:var(--caution-bg); width:40px; height:40px;"><span class="msr" style="color:var(--caution); font-size:20px;">description</span></div>
+            <div>
+              <div class="f14 fw8">편의점 야간알바 계약서</div>
+              <div class="f12 tc mt8">2026.07.22 · 위험도 61점</div>
+            </div>
+          </div>
+          <span class="badge badge-caution">주의 1</span>
+        </div>
+      </div>
+      <div class="card mt12" style="padding:16px;">
+        <div class="row between">
+          <div class="row gap10">
+            <div class="iconbox" style="background:var(--safe-bg); width:40px; height:40px;"><span class="msr" style="color:var(--safe); font-size:20px;">description</span></div>
+            <div>
+              <div class="f14 fw8">스타트업 인턴 계약서</div>
+              <div class="f12 tc mt8">2026.07.20 · 위험도 94점</div>
+            </div>
+          </div>
+          <span class="badge badge-safe">안전</span>
+        </div>
+      </div>
+      <div class="card mt12" style="padding:16px;">
+        <div class="row between">
+          <div class="row gap10">
+            <div class="iconbox" style="background:#F0F0EF; width:40px; height:40px;"><span class="msr" style="color:var(--ink-3); font-size:20px;">hourglass_top</span></div>
+            <div>
+              <div class="f14 fw8">물류센터 단기알바 계약서</div>
+              <div class="f12 tc mt8">2026.07.18 · 분석 대기중</div>
+            </div>
+          </div>
+          <span class="badge badge-neutral">대기</span>
+        </div>
+      </div>
+    </div>
+    <div class="bottomnav">
+      <div class="navitem"><span class="msr">home</span>홈</div>
+      <div class="navitem"><span class="msr">photo_camera</span>촬영</div>
+      <div class="navitem active"><span class="msr fill">folder</span>내역<div class="dot"></div></div>
+      <div class="navitem"><span class="msr">notifications</span>알림</div>
+      <div class="navitem"><span class="msr">person</span>마이</div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 18 NOTIFICATIONS ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>18</b> <span>알림</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div class="content">
+      <div class="f22 fw8" style="padding:14px 4px 10px;">알림</div>
+
+      <div class="sec-label" style="margin-top:8px;">오늘</div>
+      <div class="row gap12" style="padding:14px 4px;">
+        <div class="iconbox" style="background:var(--danger-bg);"><span class="msr" style="color:var(--danger);">warning</span></div>
+        <div style="flex:1;">
+          <div class="f14 fw8">분석이 완료됐어요</div>
+          <div class="f12 tc mt8" style="line-height:1.6;">'알바몬 카페 근로계약서'에서 위험 조항 3건이 발견됐어요</div>
+          <div class="f11 tc mt8">10분 전</div>
+        </div>
+        <div style="width:8px;height:8px;border-radius:50%; background:var(--yellow); margin-top:6px;"></div>
+      </div>
+
+      <div class="sec-label">이번 주</div>
+      <div class="row gap12" style="padding:14px 4px;">
+        <div class="iconbox" style="background:#F0F0EF;"><span class="msr">support_agent</span></div>
+        <div style="flex:1;">
+          <div class="f14 fw8">노무사 답변이 도착했어요</div>
+          <div class="f12 tc mt8" style="line-height:1.6;">문의하신 손해배상 조항에 대한 답변을 확인해보세요</div>
+          <div class="f11 tc mt8">2일 전</div>
+        </div>
+      </div>
+      <div class="row gap12" style="padding:14px 4px;">
+        <div class="iconbox" style="background:#F0F0EF;"><span class="msr">campaign</span></div>
+        <div style="flex:1;">
+          <div class="f14 fw8">2026년 최저임금 안내</div>
+          <div class="f12 tc mt8" style="line-height:1.6;">2026년 최저시급은 10,320원으로 인상됐어요</div>
+          <div class="f11 tc mt8">5일 전</div>
+        </div>
+      </div>
+    </div>
+    <div class="bottomnav">
+      <div class="navitem"><span class="msr">home</span>홈</div>
+      <div class="navitem"><span class="msr">photo_camera</span>촬영</div>
+      <div class="navitem"><span class="msr">folder</span>내역</div>
+      <div class="navitem active"><span class="msr fill">notifications</span>알림<div class="dot"></div></div>
+      <div class="navitem"><span class="msr">person</span>마이</div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 19 MYPAGE ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>19</b> <span>마이페이지</span></div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div class="content">
+      <div class="row gap12" style="padding:16px 4px;">
+        <div class="avatar" style="width:60px; height:60px; background:var(--yellow-soft);"><span class="msr" style="font-size:28px;">person</span></div>
+        <div>
+          <div class="f18 fw8">지민 님</div>
+          <div class="f12 tc mt8">jimin_park@email.com</div>
+        </div>
+      </div>
+
+      <div class="card row" style="padding:18px; margin-top:8px;">
+        <div style="flex:1; text-align:center;">
+          <div class="f18 fw8">4</div>
+          <div class="f11 tc mt8">분석 건수</div>
+        </div>
+        <div style="width:1px; background:var(--line);"></div>
+        <div style="flex:1; text-align:center;">
+          <div class="f18 fw8" style="color:var(--danger);">3</div>
+          <div class="f11 tc mt8">발견된 위험조항</div>
+        </div>
+        <div style="width:1px; background:var(--line);"></div>
+        <div style="flex:1; text-align:center;">
+          <div class="f18 fw8">1</div>
+          <div class="f11 tc mt8">상담 이력</div>
+        </div>
+      </div>
+
+      <div class="sec-label">설정</div>
+      <div class="card" style="padding:4px;">
+        <div class="row between" style="padding:14px 12px;"><div class="row gap10"><span class="msr" style="color:var(--ink-2);">badge</span><div class="f14 fw7">내 근무 정보 관리</div></div><span class="msr" style="color:var(--ink-3);">chevron_right</span></div>
+        <div style="height:1px; background:var(--line); margin:0 12px;"></div>
+        <div class="row between" style="padding:14px 12px;"><div class="row gap10"><span class="msr" style="color:var(--ink-2);">notifications</span><div class="f14 fw7">알림 설정</div></div><span class="msr" style="color:var(--ink-3);">chevron_right</span></div>
+        <div style="height:1px; background:var(--line); margin:0 12px;"></div>
+        <div class="row between" style="padding:14px 12px;"><div class="row gap10"><span class="msr" style="color:var(--ink-2);">lock</span><div class="f14 fw7">개인정보 처리방침</div></div><span class="msr" style="color:var(--ink-3);">chevron_right</span></div>
+      </div>
+
+      <div class="sec-label">지원</div>
+      <div class="card" style="padding:4px;">
+        <div class="row between" style="padding:14px 12px;"><div class="row gap10"><span class="msr" style="color:var(--ink-2);">help</span><div class="f14 fw7">자주 묻는 질문</div></div><span class="msr" style="color:var(--ink-3);">chevron_right</span></div>
+        <div style="height:1px; background:var(--line); margin:0 12px;"></div>
+        <div class="row between" style="padding:14px 12px;"><div class="row gap10"><span class="msr" style="color:var(--ink-2);">mail</span><div class="f14 fw7">문의하기</div></div><span class="msr" style="color:var(--ink-3);">chevron_right</span></div>
+      </div>
+
+      <div class="center f13 fw7" style="color:var(--danger); padding:20px;">로그아웃</div>
+    </div>
+    <div class="bottomnav">
+      <div class="navitem"><span class="msr">home</span>홈</div>
+      <div class="navitem"><span class="msr">photo_camera</span>촬영</div>
+      <div class="navitem"><span class="msr">folder</span>내역</div>
+      <div class="navitem"><span class="msr">notifications</span>알림</div>
+      <div class="navitem active"><span class="msr fill">person</span>마이<div class="dot"></div></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ 20 DESIGN SYSTEM ============ -->
+<div class="frame-wrap">
+  <div class="frame-label"><b>20</b> <span>Design System</span></div>
+  <div class="phone" style="height:auto; min-height:844px;"><div class="notch"></div><div class="screen" style="height:auto; overflow-y:auto;">
+    <div class="statusbar"><span>9:41</span><div class="icons"><span class="msr" style="font-size:16px;">signal_cellular_alt</span><span class="msr" style="font-size:16px;">wifi</span><span class="msr" style="font-size:16px;">battery_full</span></div></div>
+    <div class="content" style="overflow:visible;">
+      <div class="f22 fw8" style="padding:14px 4px 4px;">Design System</div>
+      <div class="f12 tc" style="padding:0 4px;">형광펜 — 형광펜 마커 & Apple HIG 미니멀 스타일</div>
+
+      <div class="sec-label">Colors</div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+        <div><div style="height:56px;border-radius:12px;background:var(--yellow); border:1px solid var(--line);"></div><div class="f11 fw7 mt8">Primary</div><div class="f11 tc">#D9FF3F</div></div>
+        <div><div style="height:56px;border-radius:12px;background:var(--ink);"></div><div class="f11 fw7 mt8">Ink</div><div class="f11 tc">#191919</div></div>
+        <div><div style="height:56px;border-radius:12px;background:var(--safe);"></div><div class="f11 fw7 mt8">Safe</div><div class="f11 tc">#2FBE5C</div></div>
+        <div><div style="height:56px;border-radius:12px;background:var(--caution);"></div><div class="f11 fw7 mt8">Caution</div><div class="f11 tc">#FF9F0A</div></div>
+        <div><div style="height:56px;border-radius:12px;background:var(--danger);"></div><div class="f11 fw7 mt8">Danger</div><div class="f11 tc">#FF3B30</div></div>
+        <div><div style="height:56px;border-radius:12px;background:#F5F5F4; border:1px solid var(--line);"></div><div class="f11 fw7 mt8">Surface</div><div class="f11 tc">#F5F5F4</div></div>
+        <div><div style="height:56px;border-radius:12px;background:#FFFFFF; border:1px solid var(--line);"></div><div class="f11 fw7 mt8">White</div><div class="f11 tc">#FFFFFF</div></div>
+        <div><div style="height:56px;border-radius:12px;background:var(--ink-3);"></div><div class="f11 fw7 mt8">Ink-3</div><div class="f11 tc">#8A8A8E</div></div>
+      </div>
+
+      <div class="sec-label">Typography — Nanum Gothic</div>
+      <div class="card" style="padding:18px;">
+        <div style="font-size:26px; font-weight:800;">제목 Title / 26·800</div>
+        <div style="font-size:20px; font-weight:800; margin-top:10px;">부제목 Headline / 20·800</div>
+        <div style="font-size:16px; font-weight:700; margin-top:10px;">본문 강조 Body Bold / 16·700</div>
+        <div style="font-size:14px; font-weight:400; margin-top:10px;">본문 Body Regular / 14·400</div>
+        <div style="font-size:12px; font-weight:700; color:var(--ink-3); margin-top:10px;">캡션 Caption / 12·700</div>
+      </div>
+
+      <div class="sec-label">Buttons (Variants)</div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <button class="btn btn-primary">Primary</button>
+        <button class="btn btn-secondary">Secondary</button>
+        <button class="btn btn-outline">Outline</button>
+        <button class="btn btn-ghost">Ghost</button>
+        <button class="btn btn-primary" disabled>Disabled</button>
+        <div class="row gap8"><button class="btn btn-secondary btn-sm">Small</button><button class="btn btn-outline btn-sm">Small</button></div>
+      </div>
+
+      <div class="sec-label">Inputs</div>
+      <input class="input" placeholder="기본 입력 (Placeholder)" />
+      <input class="input mt12" value="입력된 값" />
+      <input class="input mt12" style="border-color:var(--danger); color:var(--danger);" value="오류가 있는 입력" />
+
+      <div class="sec-label">Cards</div>
+      <div class="card">기본 카드 · Radius 20px · Shadow</div>
+      <div class="card-flat mt12">플랫 카드 (Flat)</div>
+
+      <div class="sec-label">Bottom Navigation</div>
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div class="bottomnav" style="border-top:none; padding-bottom:14px;">
+          <div class="navitem active"><span class="msr fill">home</span>홈<div class="dot"></div></div>
+          <div class="navitem"><span class="msr">photo_camera</span>촬영</div>
+          <div class="navitem"><span class="msr">folder</span>내역</div>
+          <div class="navitem"><span class="msr">notifications</span>알림</div>
+          <div class="navitem"><span class="msr">person</span>마이</div>
+        </div>
+      </div>
+
+      <div class="sec-label">Badges</div>
+      <div class="row gap8" style="flex-wrap:wrap;">
+        <span class="badge badge-safe"><span class="msr">check_circle</span>안전</span>
+        <span class="badge badge-caution"><span class="msr">error</span>주의</span>
+        <span class="badge badge-danger"><span class="msr">warning</span>위험</span>
+        <span class="badge badge-neutral">대기</span>
+      </div>
+
+      <div class="sec-label">Chips</div>
+      <div class="row gap8" style="flex-wrap:wrap;">
+        <div class="chip active">선택됨</div>
+        <div class="chip">기본</div>
+        <div class="chip yellow">강조</div>
+      </div>
+
+      <div class="sec-label">Progress Bar</div>
+      <div class="progress-track"><div class="progress-fill" style="width:70%;"></div></div>
+      <div class="progress-track mt12"><div class="progress-fill dark" style="width:40%;"></div></div>
+
+      <div class="sec-label">Risk Score Gauge</div>
+      <div class="row gap16" style="justify-content:center; align-items:flex-end;">
+        <div style="text-align:center;">
+          <svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="38" stroke="#F0F0EF" stroke-width="9" fill="none"/><circle cx="45" cy="45" r="38" stroke="#2FBE5C" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="238" stroke-dashoffset="30" transform="rotate(-90 45 45)"/></svg>
+          <div class="f11 fw8 mt8" style="color:var(--safe);">안전 87</div>
+        </div>
+        <div style="text-align:center;">
+          <svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="38" stroke="#F0F0EF" stroke-width="9" fill="none"/><circle cx="45" cy="45" r="38" stroke="#FF9F0A" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="238" stroke-dashoffset="120" transform="rotate(-90 45 45)"/></svg>
+          <div class="f11 fw8 mt8" style="color:var(--caution);">주의 55</div>
+        </div>
+        <div style="text-align:center;">
+          <svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="38" stroke="#F0F0EF" stroke-width="9" fill="none"/><circle cx="45" cy="45" r="38" stroke="#FF3B30" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="238" stroke-dashoffset="192" transform="rotate(-90 45 45)"/></svg>
+          <div class="f11 fw8 mt8" style="color:var(--danger);">위험 25</div>
+        </div>
+      </div>
+
+      <div class="sec-label">Highlight Component</div>
+      <div class="card" style="line-height:2.1;">
+        일반 텍스트 속 <span class="hl">기본 형광펜 강조</span>, <span class="hl-caution">주의 표시 강조</span>, <span class="hl-danger">위험 표시 강조</span>를 사용합니다.
+      </div>
+
+      <div class="sec-label">Dialog</div>
+      <div style="display:flex; justify-content:center; background:#00000010; border-radius:16px; padding:20px 0;">
+        <div class="dialog center">
+          <span class="msr" style="font-size:34px; color:var(--danger);">warning</span>
+          <div class="f16 fw8 mt12">분석을 종료할까요?</div>
+          <div class="f12 tc mt8">지금 나가면 분석 내용이 저장되지 않아요</div>
+          <div class="row gap8 mt16">
+            <button class="btn btn-ghost btn-sm" style="flex:1;">취소</button>
+            <button class="btn btn-secondary btn-sm" style="flex:1;">종료</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-label">Bottom Sheet</div>
+      <div class="sheet">
+        <div class="handle"></div>
+        <div class="f16 fw8">공유하기</div>
+        <div class="row gap16 mt16">
+          <div class="center f11 fw7"><div class="iconbox" style="background:#F5F5F4; margin:0 auto 6px;"><span class="msr">chat_bubble</span></div>카카오</div>
+          <div class="center f11 fw7"><div class="iconbox" style="background:#F5F5F4; margin:0 auto 6px;"><span class="msr">link</span></div>링크복사</div>
+          <div class="center f11 fw7"><div class="iconbox" style="background:#F5F5F4; margin:0 auto 6px;"><span class="msr">ios_share</span></div>더보기</div>
+        </div>
+      </div>
+
+      <div class="sec-label">Toast</div>
+      <div class="toast" style="width:fit-content;"><span class="msr fill" style="color:var(--yellow);">check_circle</span>링크가 복사되었어요</div>
+
+      <div class="sec-label">Empty State</div>
+      <div class="card center" style="padding:36px 20px;">
+        <span class="msr" style="font-size:44px; color:var(--ink-3);">folder_open</span>
+        <div class="f14 fw8 mt12">아직 분석한 계약서가 없어요</div>
+        <div class="f12 tc mt8">계약서를 촬영하거나 업로드해보세요</div>
+      </div>
+
+      <div class="sec-label">Error State</div>
+      <div class="card center" style="padding:36px 20px;">
+        <span class="msr" style="font-size:44px; color:var(--danger);">error</span>
+        <div class="f14 fw8 mt12">분석 중 문제가 발생했어요</div>
+        <div class="f12 tc mt8">잠시 후 다시 시도해주세요</div>
+        <button class="btn btn-secondary btn-sm mt16" style="margin:16px auto 0;">다시 시도</button>
+      </div>
+
+      <div class="sec-label">Loading</div>
+      <div class="card center" style="padding:30px;">
+        <div style="width:32px;height:32px;border:4px solid #F0F0EF; border-top-color:var(--yellow); border-radius:50%; margin:0 auto; animation:spin 1s linear infinite;"></div>
+      </div>
+      <style>@keyframes spin{to{transform:rotate(360deg);}}</style>
+
+      <div class="sec-label">Icons — Material Symbols Rounded</div>
+      <div class="card" style="display:grid; grid-template-columns:repeat(6,1fr); gap:14px; text-align:center;">
+        <span class="msr">home</span><span class="msr">photo_camera</span><span class="msr">upload_file</span><span class="msr">description</span><span class="msr">warning</span><span class="msr">gavel</span>
+        <span class="msr">support_agent</span><span class="msr">notifications</span><span class="msr">person</span><span class="msr">check_circle</span><span class="msr">error</span><span class="msr">folder</span>
+      </div>
+      <div style="height:20px;"></div>
+    </div>
+  </div></div>
+</div>
+
+</div>
+</body>
+</html>

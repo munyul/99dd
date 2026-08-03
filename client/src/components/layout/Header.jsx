@@ -36,7 +36,7 @@ function Header({
       <div className="topnav-title">{title}</div>
 
       {rightIcon ? (
-        <button className="topnav-button" type="button" aria-label="메뉴" onClick={onRightClick}>
+        <button className="topnav-button" type="button" aria-label={rightIcon === 'settings' ? '설정' : '메뉴'} onClick={onRightClick}>
           <span className="msr topnav-action-icon">{rightIcon}</span>
         </button>
       ) : (
