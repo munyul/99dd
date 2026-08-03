@@ -19,7 +19,8 @@ import {
   PrivacyPage,
   FaqPage,
   ContactPage,
-} from "./pages/5.충근/19_MySubPages.jsx";
+  AccountSettingsPage,
+} from "./pages/5.충근/mypage/index.js";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
         <Route path="/screen/19/privacy" element={<PrivacyPage />} />
         <Route path="/screen/19/faq" element={<FaqPage />} />
         <Route path="/screen/19/contact" element={<ContactPage />} />
+        <Route path="/screen/19/account-settings" element={<AccountSettingsPage />} />
       </Route>
     </Routes>
   );

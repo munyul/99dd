@@ -1,7 +1,16 @@
+// ===============================================
+// 마이페이지 메인 컴포넌트 (19번 화면)
+// ===============================================
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router";
 
-// [공통 컴포넌트 1] 통계 숫자 표시
+/**
+ * StatItem 컴포넌트 (마이페이지 상단 통계 건수 및 레이블 표시용)
+ * @param {Object} props - 컴포넌트 속성
+ * @param {number} [props.count=0] - 통계 수치 값
+ * @param {string} props.label - 통계 항목 설명 레이블
+ * @param {boolean} [props.isDanger=false] - 위험 수치 여부 (true일 경우 경고 색상 적용)
+ */
 const StatItem = ({ count = 0, label, isDanger = false }) => (
   <div style={{ flex: 1, textAlign: "center" }}>
     <div
@@ -16,7 +25,14 @@ const StatItem = ({ count = 0, label, isDanger = false }) => (
   </div>
 );
 
-// [공통 컴포넌트 2] 리스트 메뉴 아이템
+/**
+ * MenuItem 컴포넌트 (설정 및 지원 메뉴 목록의 개별 행 항목)
+ * @param {Object} props - 컴포넌트 속성
+ * @param {string} props.icon - 구글 Material Symbol 아이콘 이름
+ * @param {string} props.title - 메뉴 항목 제목
+ * @param {Function} props.onClick - 메뉴 클릭 시 실행될 이동 콜백 함수
+ * @param {boolean} [props.isLast=false] - 마지막 메뉴 항목 여부 (하단 구분선 제거용)
+ */
 const MenuItem = ({ icon, title, onClick, isLast = false }) => (
   <div
     onClick={onClick}
@@ -26,6 +42,7 @@ const MenuItem = ({ icon, title, onClick, isLast = false }) => (
       justifyContent: "space-between",
       padding: "18px 0",
       cursor: "pointer",
+      // 마지막 항목일 경우 하단 구분선 제거
       borderBottom: isLast ? "none" : "1px solid var(--line)",
     }}
   >
@@ -43,18 +60,24 @@ const MenuItem = ({ icon, title, onClick, isLast = false }) => (
   </div>
 );
 
-// [메인 컴포넌트] 마이페이지 (19번 화면)
+/**
+ * MyPage 컴포넌트 (마이페이지 메인 화면 및 사용자 대시보드)
+ * @param {Object} props - 컴포넌트 속성
+ * @param {Object} [props.userData] - 사용자 프로필 및 통계 데이터 객체
+ */
 const MyPage = ({ userData }) => {
   const navigate = useNavigate();
+  // 로그아웃 확인 모달의 열림/닫힘 상태 관리
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  // 백엔드 연결 전 기본값 설정
+  // 전달받은 사용자 데이터가 없는 경우 기본 목업(Mock) 데이터 사용
   const user = userData || {
     name: "지민",
     email: "jimin_park@email.com",
     stats: { total: 4, danger: 3, consult: 1 },
   };
 
+  // 설정 관련 메뉴 항목 데이터 배열 (useMemo를 통한 최적화)
   const settingsMenu = useMemo(
     () => [
       {
@@ -79,6 +102,7 @@ const MyPage = ({ userData }) => {
     [],
   );
 
+  // 지원 및 고객센터 관련 메뉴 항목 데이터 배열
   const supportMenu = useMemo(
     () => [
       {
@@ -97,6 +121,9 @@ const MyPage = ({ userData }) => {
     [],
   );
 
+  /**
+   * 로그아웃 최종 확인 핸들러
+   */
   const handleConfirmLogout = () => {
     alert("로그아웃 되었습니다.");
     setIsLogoutModalOpen(false);
@@ -104,8 +131,8 @@ const MyPage = ({ userData }) => {
 
   return (
     <>
-      {/* 1. 프로필 영역 */}
-      <div className="row gap12" style={{ padding: "16px 0 24px" }}>
+      {/* ================= 1. 프로필 영역 ================= */}
+      <div className="row gap12" style={{ padding: "8px 0 24px" }}>
         <div
           className="avatar"
           style={{
@@ -130,7 +157,7 @@ const MyPage = ({ userData }) => {
         </div>
       </div>
 
-      {/* 2. 통계 카드 */}
+      {/* ================= 2. 통계 요약 카드 영역 ================= */}
       <div
         className="card row"
         style={{ padding: "20px 16px", marginBottom: "32px" }}
@@ -150,7 +177,7 @@ const MyPage = ({ userData }) => {
         <StatItem count={user.stats?.consult} label="상담 이력" />
       </div>
 
-      {/* 3. 설정 메뉴 */}
+      {/* ================= 3. 설정 메뉴 섹션 ================= */}
       <div style={{ marginBottom: "28px" }}>
         <div
           className="f13 fw7 tc2"
@@ -171,7 +198,7 @@ const MyPage = ({ userData }) => {
         </div>
       </div>
 
-      {/* 4. 지원 메뉴 */}
+      {/* ================= 4. 지원 메뉴 섹션 ================= */}
       <div style={{ marginBottom: "40px" }}>
         <div
           className="f13 fw7 tc2"
@@ -192,7 +219,7 @@ const MyPage = ({ userData }) => {
         </div>
       </div>
 
-      {/* 5. 로그아웃 버튼 */}
+      {/* ================= 5. 로그아웃 버튼 영역 ================= */}
       <div style={{ textAlign: "center", paddingBottom: "40px" }}>
         <button
           onClick={() => setIsLogoutModalOpen(true)}
@@ -210,7 +237,7 @@ const MyPage = ({ userData }) => {
         </button>
       </div>
 
-      {/* 6. 로그아웃 모달 */}
+      {/* ================= 6. 로그아웃 확인 모달 ================= */}
       {isLogoutModalOpen && (
         <div
           style={{
