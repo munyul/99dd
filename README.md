@@ -38,13 +38,14 @@ npm run dev
 ## OCR 서버 실행
 
 ```bash
-cd ocr-service
-python -m venv .venv
-# Windows: .venv\Scripts\activate
-# macOS/Linux: source .venv/bin/activate
+cd ocr-server
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn main:app --reload
+PADDLE_PDX_CACHE_HOME=.paddlex .venv/bin/python -m uvicorn main:app --reload --port 8000
 ```
+
+클라이언트 OCR URL은 `client/.env.development`의 `VITE_OCR_API_URL`로 설정합니다.
 
 ## 협업 핵심 규칙
 

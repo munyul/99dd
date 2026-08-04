@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import DeviceShell from '../../components/layout/DeviceShell.jsx'
 import Header from '../../components/layout/Header.jsx'
+import { extractReviewFieldsFromContract } from '../../api/contractParser.js'
 
 const ROUTE_PATHS = {
   ocrProgress: '/screen/9',
@@ -9,11 +10,10 @@ const ROUTE_PATHS = {
 }
 
 const DEFAULT_REVIEW_VALUES = {
-  companyName: '(주)모카커피',
-  startDate: '2026년 08월 01일',
-  hourlyWage: '9,860원',
-  contractText:
-    '제3조(근로시간) 근로자의 근무시간은 09:00~18:00로 한다. 회사의 필요에 따라 근로자는 추가 수당 없이 연장 근무를 할 수 있다.\n제4조(임금) 시급 9,860원을 지급하며 주휴수당은 별도 지급하지 않는다.',
+  companyName: '',
+  startDate: '',
+  hourlyWage: '',
+  contractText: '',
 }
 
 const pageStyles = `
@@ -254,11 +254,25 @@ function InfoIcon() {
 }
 
 function createInitialValues(initialValues) {
+  const contractText =
+    initialValues?.contractText == null
+      ? DEFAULT_REVIEW_VALUES.contractText
+      : String(initialValues.contractText)
+  const parsedFields = extractReviewFieldsFromContract(contractText)
+
   return Object.fromEntries(
-    Object.entries(DEFAULT_REVIEW_VALUES).map(([key, fallbackValue]) => [
-      key,
-      initialValues?.[key] == null ? fallbackValue : String(initialValues[key]),
-    ]),
+    Object.entries(DEFAULT_REVIEW_VALUES).map(([key, fallbackValue]) => {
+      if (key === 'contractText') {
+        return [key, contractText]
+      }
+
+      const provided = initialValues?.[key]
+      if (provided != null && String(provided).trim() !== '') {
+        return [key, String(provided)]
+      }
+
+      return [key, parsedFields[key] || fallbackValue]
+    }),
   )
 }
 
@@ -403,4 +417,11 @@ function OcrReview({ initialValues, onBack, onAnalyze }) {
   )
 }
 
-export default OcrReview
+function OcrReviewPage(props) {
+  const location = useLocation()
+  const ocrResult = location.state?.ocrResult
+
+  return <OcrReview {...props} initialValues={props.initialValues ?? ocrResult} />
+}
+
+export default OcrReviewPage

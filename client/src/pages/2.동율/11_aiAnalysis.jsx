@@ -1,6 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
+import { analyzeContractText } from '../../api/gemini.js'
 import DeviceShell from '../../components/layout/DeviceShell.jsx'
+
+const inFlightAnalysisByText = new Map()
+
+function getSharedAnalysisPromise(contractText) {
+  const existing = inFlightAnalysisByText.get(contractText)
+  if (existing) return existing
+
+  const promise = analyzeContractText(contractText).finally(() => {
+    inFlightAnalysisByText.delete(contractText)
+  })
+
+  inFlightAnalysisByText.set(contractText, promise)
+  return promise
+}
 
 const ANALYSIS_RESULT_PATH = '/screen/12'
 
@@ -507,4 +522,90 @@ function AiAnalysis({
   )
 }
 
-export default AiAnalysis
+export default AiAnalysisPage
+
+function AiAnalysisPage({ onComplete }) {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const reviewedContract = location.state?.reviewedContract
+  const [currentStep, setCurrentStep] = useState(0)
+  const [liveFinding, setLiveFinding] = useState('')
+  const [analysisData, setAnalysisData] = useState(null)
+  const isApiDoneRef = useRef(false)
+
+  useEffect(() => {
+    let cancelled = false
+
+    const contractText =
+      reviewedContract?.contractText || '계약서 내용이 없습니다.'
+
+    const runAnalysis = async () => {
+      try {
+        const result = await getSharedAnalysisPromise(contractText)
+
+        if (cancelled) return
+
+        setAnalysisData(result)
+        isApiDoneRef.current = true
+
+        if (result.clauses?.length > 0) {
+          setLiveFinding(`${result.clauses[0].title} 항목을 발견했어요`)
+        }
+      } catch (err) {
+        if (cancelled) return
+
+        console.error('AI 분석 실패:', err)
+        alert('계약서 분석 중 오류가 발생했습니다.')
+        navigate('/screen/10')
+      }
+    }
+
+    runAnalysis()
+
+    const timer1 = setTimeout(() => !cancelled && setCurrentStep(1), 1200)
+    const timer2 = setTimeout(() => !cancelled && setCurrentStep(2), 2500)
+    const timer3 = setTimeout(() => !cancelled && setCurrentStep(3), 3800)
+
+    return () => {
+      cancelled = true
+      clearTimeout(timer1)
+      clearTimeout(timer2)
+      clearTimeout(timer3)
+    }
+  }, [reviewedContract, navigate])
+
+  useEffect(() => {
+    if (currentStep === 3 && isApiDoneRef.current) {
+      const finalTimer = setTimeout(() => {
+        setCurrentStep(4)
+      }, 1000)
+
+      return () => clearTimeout(finalTimer)
+    }
+  }, [currentStep, analysisData])
+
+  useEffect(() => {
+    if (currentStep >= ANALYSIS_STEPS.length) {
+      const navTimer = setTimeout(() => {
+        if (onComplete) {
+          onComplete(analysisData)
+          return
+        }
+
+        navigate(ANALYSIS_RESULT_PATH, {
+          state: { analysisResult: analysisData, reviewedContract },
+        })
+      }, 700)
+
+      return () => clearTimeout(navTimer)
+    }
+  }, [currentStep, analysisData, navigate, onComplete, reviewedContract])
+
+  return (
+    <AiAnalysis
+      currentStep={currentStep}
+      liveMessage={liveFinding}
+      onComplete={() => {}}
+    />
+  )
+}
