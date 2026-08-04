@@ -505,7 +505,7 @@ function FileUpload({ onClose, onFileSelect, onStartAnalysis }) {
       return
     }
 
-    navigate(ROUTE_PATHS.ocrProgress)
+    navigate(ROUTE_PATHS.ocrProgress, { state: { file: selectedFile } })
   }
 
   const isPdf = getFileExtension(selectedFile?.name ?? '') === 'pdf'

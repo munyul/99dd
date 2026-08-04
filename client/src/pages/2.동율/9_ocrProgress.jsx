@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
+import { recognizeContract } from '../../api/ocr.js'
+import { structureOcrContract } from '../../api/contractParser.js'
 import DeviceShell from '../../components/layout/DeviceShell.jsx'
 
 const OCR_REVIEW_PATH = '/screen/10'
@@ -319,6 +321,49 @@ const pageStyles = `
     display: none;
   }
 
+  .op-error {
+    max-width: 280px;
+    margin: 0;
+    color: #ff403b;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.55;
+    letter-spacing: -0.02em;
+    word-break: keep-all;
+  }
+
+  .op-retry-button {
+    display: inline-flex;
+    min-height: 52px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 22px;
+    padding: 0 22px;
+    border: 0;
+    border-radius: 16px;
+    background: #d9ff3f;
+    color: #191919;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    cursor: pointer;
+    transition: transform 160ms ease, filter 160ms ease;
+  }
+
+  .op-retry-button:hover {
+    filter: brightness(0.97);
+  }
+
+  .op-retry-button:active {
+    transform: scale(0.97);
+  }
+
+  .op-retry-button:focus-visible {
+    outline: 3px solid rgba(47, 132, 255, 0.4);
+    outline-offset: 2px;
+  }
+
   @keyframes op-recognition-reveal {
     0% {
       clip-path: inset(0 0 100% 0);
@@ -617,4 +662,103 @@ function OcrProgress({
   )
 }
 
-export default OcrProgress
+export default OcrProgressPage
+
+function OcrProgressPage() {
+  const navigate = useNavigate()
+  const { state } = useLocation()
+  const file = state?.file
+  const [progress, setProgress] = useState(0)
+  const [stage, setStage] = useState('preparing')
+  const [errorMessage, setErrorMessage] = useState('')
+  const hasNavigatedRef = useRef(false)
+
+  useEffect(() => {
+    if (!file) {
+      setErrorMessage('업로드할 파일 정보가 없습니다. 파일을 다시 선택해주세요.')
+      return undefined
+    }
+
+    const controller = new AbortController()
+    hasNavigatedRef.current = false
+    setProgress(8)
+    setStage('preparing')
+    setErrorMessage('')
+
+    const progressTimer = window.setInterval(() => {
+      setProgress((current) => {
+        if (current >= 90) return current
+        const next = Math.min(90, current + (current < 45 ? 9 : 4))
+        setStage(next < 45 ? 'recognizing' : 'organizing')
+        return next
+      })
+    }, 350)
+
+    const runOcr = async () => {
+      try {
+        const ocrResult = await recognizeContract(file, controller.signal)
+        if (controller.signal.aborted) return
+
+        window.clearInterval(progressTimer)
+
+        const structured = structureOcrContract(ocrResult.contractText)
+        if (controller.signal.aborted) return
+
+        const reviewResult = {
+          ...ocrResult,
+          companyName: structured.companyName || ocrResult.companyName || '',
+          startDate: structured.startDate || ocrResult.startDate || '',
+          hourlyWage: structured.hourlyWage || ocrResult.hourlyWage || '',
+          contractText: structured.contractText || ocrResult.contractText || '',
+        }
+
+        setStage('complete')
+        setProgress(100)
+        window.setTimeout(() => {
+          if (hasNavigatedRef.current || controller.signal.aborted) return
+          hasNavigatedRef.current = true
+          navigate(OCR_REVIEW_PATH, { replace: true, state: { ocrResult: reviewResult } })
+        }, 250)
+      } catch (error) {
+        if (error.name === 'AbortError') return
+        window.clearInterval(progressTimer)
+        setErrorMessage(error.message)
+      }
+    }
+
+    runOcr()
+
+    return () => {
+      controller.abort()
+      window.clearInterval(progressTimer)
+    }
+  }, [file, navigate])
+
+  if (errorMessage) {
+    return (
+      <>
+        <style>{pageStyles}</style>
+        <DeviceShell className="op-page" deviceClassName="op-device">
+          <main className="op-content" aria-label="OCR 진행">
+            <p className="op-error" role="alert">{errorMessage}</p>
+            <button
+              type="button"
+              className="op-retry-button"
+              onClick={() => navigate('/screen/8', { replace: true })}
+            >
+              파일 다시 선택하기
+            </button>
+          </main>
+        </DeviceShell>
+      </>
+    )
+  }
+
+  return (
+    <OcrProgress
+      progress={progress}
+      stage={stage}
+      onComplete={() => {}}
+    />
+  )
+}

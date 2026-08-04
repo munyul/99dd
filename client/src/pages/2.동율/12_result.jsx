@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import DeviceShell from '../../components/layout/DeviceShell.jsx'
+import { buildContractAnalysisPresentation } from '../../api/contractParser.js'
 
 const FILTERS = [
   { key: 'all', label: '전체' },
@@ -15,6 +16,27 @@ const SEVERITY_LABELS = {
   safe: '안전 조항',
 }
 
+const SEVERITY_ALIASES = {
+  danger: 'danger',
+  caution: 'caution',
+  safe: 'safe',
+  위험: 'danger',
+  주의: 'caution',
+  안전: 'safe',
+}
+
+function normalizeSeverity(severity) {
+  const key = String(severity ?? '').trim().toLowerCase()
+  return SEVERITY_ALIASES[key] || SEVERITY_ALIASES[severity] || severity
+}
+
+function normalizeClauses(clauses) {
+  return clauses.map((clause) => ({
+    ...clause,
+    severity: normalizeSeverity(clause.severity),
+  }))
+}
+
 const DEFAULT_ANALYSIS_RESULT = {
   clauses: [
     {
@@ -25,7 +47,7 @@ const DEFAULT_ANALYSIS_RESULT = {
       description: '추가 수당을 지급하지 않는다는 문구가 법정 가산임금 기준과 충돌할 수 있어요.',
       lawStandard: '연장근로에는 통상임금의 50% 이상을 가산해 지급해야 해요.',
       reference: '근로기준법 제56조 위반 소지',
-      sourceUrl: 'https://law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1025590209',
+      sourceUrl: 'https://law.go.kr/',
     },
     {
       id: 'weekly-holiday',
@@ -35,7 +57,7 @@ const DEFAULT_ANALYSIS_RESULT = {
       description: '근무 조건을 따지지 않고 주휴수당을 배제하는 문구는 위험할 수 있어요.',
       lawStandard: '사용자는 근로자에게 1주에 평균 1회 이상의 유급휴일을 보장해야 해요.',
       reference: '근로기준법 제55조 확인 필요',
-      sourceUrl: 'https://www.law.go.kr/lsLinkCommonInfo.do?ancYnChk=&chrClsCd=010202&lsJoLnkSeq=1015677471',
+      sourceUrl: 'https://www.law.go.kr/',
     },
     {
       id: 'unfair-dismissal',
@@ -45,7 +67,7 @@ const DEFAULT_ANALYSIS_RESULT = {
       description: '회사의 필요만으로 즉시 해지할 수 있다는 문구는 근로자에게 매우 불리해요.',
       lawStandard: '사용자는 정당한 이유 없이 근로자를 해고하거나 징벌할 수 없어요.',
       reference: '근로기준법 제23조 위반 소지',
-      sourceUrl: 'https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1025589911',
+      sourceUrl: 'https://www.law.go.kr/',
     },
     {
       id: 'excessive-damages',
@@ -55,7 +77,7 @@ const DEFAULT_ANALYSIS_RESULT = {
       description: '실제 손해와 관계없이 배상액을 미리 정한 것으로 해석될 가능성이 있어요.',
       lawStandard: '근로계약 불이행에 대한 위약금이나 손해배상액을 미리 정할 수 없어요.',
       reference: '근로기준법 제20조 위반 소지',
-      sourceUrl: 'https://law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1007689123',
+      sourceUrl: 'https://law.go.kr/',
     },
     {
       id: 'unclear-duties',
@@ -65,7 +87,7 @@ const DEFAULT_ANALYSIS_RESULT = {
       description: '업무 범위가 지나치게 넓어 계약 후 예상하지 못한 업무가 추가될 수 있어요.',
       lawStandard: '근로조건은 계약할 때 구체적으로 확인하고 서면으로 명확히 두는 것이 안전해요.',
       reference: '근로기준법 제17조 및 업무 범위 확인 필요',
-      sourceUrl: 'https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1014516221',
+      sourceUrl: 'https://law.go.kr/',
     },
     {
       id: 'working-hours',
@@ -75,7 +97,7 @@ const DEFAULT_ANALYSIS_RESULT = {
       description: '근무 시작과 종료 시간이 구체적으로 작성되어 있어 확인하기 쉬워요.',
       lawStandard: '사용자는 근로계약을 체결할 때 소정근로시간을 명시해야 해요.',
       reference: '근로기준법 제17조 기준 충족 가능',
-      sourceUrl: 'https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1014516221',
+      sourceUrl: 'https://law.go.kr/',
     },
   ],
 }
@@ -104,27 +126,28 @@ function CloseIcon() {
   )
 }
 
-function ContractHighlight({ clause, activeFilter, isSelected, onSelect, children }) {
-  const isMuted = activeFilter !== 'all' && activeFilter !== clause.severity
+function ContractHighlight({ clause, severity, activeFilter, isSelected, onSelect, children }) {
+  const resolvedSeverity = severity || clause?.severity || 'danger'
+  const isMuted = activeFilter !== 'all' && activeFilter !== resolvedSeverity
 
   const selectClause = () => {
-    if (!isMuted) onSelect(clause)
+    if (!isMuted && clause) onSelect(clause)
   }
 
   const handleKeyDown = (event) => {
-    if (isMuted || (event.key !== 'Enter' && event.key !== ' ')) return
+    if (isMuted || !clause || (event.key !== 'Enter' && event.key !== ' ')) return
     event.preventDefault()
     onSelect(clause)
   }
 
   return (
     <mark
-      className={`rs-highlight is-${clause.severity}${isMuted ? ' is-muted' : ''}${isSelected ? ' is-selected' : ''}`}
+      className={`rs-highlight is-${resolvedSeverity}${isMuted ? ' is-muted' : ''}${isSelected ? ' is-selected' : ''}`}
       role="button"
       tabIndex={isMuted ? -1 : 0}
       aria-disabled={isMuted}
       aria-pressed={isSelected}
-      aria-label={`${clause.title}: ${children}`}
+      aria-label={`${clause?.title ?? '조항'}: ${children}`}
       onClick={selectClause}
       onKeyDown={handleKeyDown}
     >
@@ -134,7 +157,7 @@ function ContractHighlight({ clause, activeFilter, isSelected, onSelect, childre
 }
 
 function AnalysisResult({
-  result,
+  result: propsResult,
   onBack,
   onShare,
   onClauseSelect,
@@ -142,19 +165,19 @@ function AnalysisResult({
   onConsult,
 }) {
   const navigate = useNavigate()
+  const location = useLocation()
   const feedbackTimerRef = useRef(null)
   const [activeFilter, setActiveFilter] = useState('all')
   const [selectedClauseId, setSelectedClauseId] = useState(null)
   const [feedbackMessage, setFeedbackMessage] = useState('')
 
-  const analysisResult = useMemo(
-    () => ({
-      ...DEFAULT_ANALYSIS_RESULT,
-      ...result,
-      clauses: result?.clauses ?? DEFAULT_ANALYSIS_RESULT.clauses,
-    }),
-    [result],
-  )
+  const analysisResult = useMemo(() => {
+    const data = propsResult || location.state?.analysisResult || {}
+    const contractText = location.state?.reviewedContract?.contractText || ''
+    const rawClauses = normalizeClauses(data.clauses || DEFAULT_ANALYSIS_RESULT.clauses)
+
+    return buildContractAnalysisPresentation(contractText, rawClauses)
+  }, [propsResult, location.state])
 
   const clausesById = useMemo(
     () => Object.fromEntries(analysisResult.clauses.map((clause) => [clause.id, clause])),
@@ -248,10 +271,11 @@ function AnalysisResult({
     showFeedback('전문가 상담 기능은 다음 연결 단계에서 제공돼요.')
   }
 
-  const highlightProps = (clauseId) => ({
-    clause: clausesById[clauseId],
+  const highlightProps = (segment) => ({
+    clause: clausesById[segment.clauseId],
+    severity: segment.severity ?? clausesById[segment.clauseId]?.severity,
     activeFilter,
-    isSelected: selectedClauseId === clauseId,
+    isSelected: selectedClauseId === segment.clauseId,
     onSelect: handleClauseSelect,
   })
 
@@ -427,6 +451,8 @@ function AnalysisResult({
           font-size: 15.5px;
           line-height: 2.08;
           letter-spacing: -0.026em;
+          white-space: pre-wrap;
+          word-break: keep-all;
         }
 
         .rs-contract-card p {
@@ -450,12 +476,16 @@ function AnalysisResult({
           transition: opacity 180ms ease, filter 180ms ease, box-shadow 180ms ease;
         }
 
+        .rs-highlight.is-danger {
+          --rs-marker: rgba(255, 64, 59, 0.62);
+        }
+
         .rs-highlight.is-caution {
-          --rs-marker: rgba(255, 179, 48, 0.58);
+          --rs-marker: rgba(255, 159, 10, 0.62);
         }
 
         .rs-highlight.is-safe {
-          --rs-marker: rgba(32, 198, 106, 0.4);
+          --rs-marker: rgba(32, 198, 106, 0.52);
         }
 
         .rs-highlight:hover,
@@ -863,42 +893,19 @@ function AnalysisResult({
         <section aria-labelledby="contract-highlight-title">
           <h2 className="rs-section-title" id="contract-highlight-title">형광펜으로 표시된 계약서</h2>
           <article className="rs-contract-card">
-            <p>
-              제3조(근로시간){' '}
-              <ContractHighlight {...highlightProps('working-hours')}>
-                근로자의 근무시간은 09:00~18:00로 한다.
-              </ContractHighlight>
-            </p>
-            <p>
-              회사의 필요에 따라{' '}
-              <ContractHighlight {...highlightProps('overtime-pay')}>
-                근로자는 추가 수당 없이 연장 근무를 할 수 있다.
-              </ContractHighlight>
-            </p>
-            <p>
-              제4조(임금) 시급 9,860원을 지급하며{' '}
-              <ContractHighlight {...highlightProps('weekly-holiday')}>
-                주휴수당은 별도 지급하지 않는다.
-              </ContractHighlight>
-            </p>
-            <p>
-              제5조(업무){' '}
-              <ContractHighlight {...highlightProps('unclear-duties')}>
-                근로자는 회사가 지정하는 기타 업무를 수행한다.
-              </ContractHighlight>
-            </p>
-            <p>
-              제6조(계약해지){' '}
-              <ContractHighlight {...highlightProps('unfair-dismissal')}>
-                회사는 필요할 경우 즉시 계약을 해지할 수 있다.
-              </ContractHighlight>
-            </p>
-            <p>
-              제7조(손해배상){' '}
-              <ContractHighlight {...highlightProps('excessive-damages')}>
-                근로자의 귀책 사유 발생 시 월 급여의 3배를 배상한다.
-              </ContractHighlight>
-            </p>
+            {/* contractText + quote 매칭으로 생성한 segments 렌더링 */}
+            {analysisResult.segments.map((segment, index) =>
+              segment.clauseId ? (
+                <ContractHighlight
+                  key={`${segment.clauseId}-${index}`}
+                  {...highlightProps(segment)}
+                >
+                  {segment.text}
+                </ContractHighlight>
+              ) : (
+                <span key={`text-${index}`}>{segment.text}</span>
+              ),
+            )}
           </article>
 
           <p className="rs-tap-hint">
@@ -949,7 +956,9 @@ function AnalysisResult({
             <div className="rs-comparison">
               <div className="rs-comparison-card">
                 <span className="rs-comparison-label">계약서 내용</span>
-                <p className="rs-comparison-text">“{selectedClause.contractText}”</p>
+                <p className="rs-comparison-text">
+                  “{selectedClause.quote || selectedClause.contractText}”
+                </p>
               </div>
               <span className="rs-compare-arrow" aria-hidden="true">↓</span>
               <div className="rs-comparison-card is-law">
@@ -961,7 +970,7 @@ function AnalysisResult({
             <p className="rs-analysis-note">{selectedClause.description}</p>
             <a
               className="rs-explanation-reference"
-              href={selectedClause.sourceUrl}
+              href="https://www.law.go.kr/법령/근로기준법"
               target="_blank"
               rel="noreferrer"
             >
@@ -981,4 +990,15 @@ function AnalysisResult({
   )
 }
 
-export default AnalysisResult
+export default AnalysisResultPage
+
+function AnalysisResultPage(props) {
+  const location = useLocation()
+
+  return (
+    <AnalysisResult
+      {...props}
+      result={props.result ?? location.state?.analysisResult}
+    />
+  )
+}

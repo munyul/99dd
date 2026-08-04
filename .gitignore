@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build output
+client/dist/
+dist/
+
+# Environment & secrets (never commit)
+.env
+.env.local
+.env.*.local
+client/.env.local
+server/.env
+*.pem
+serviceAccountKey.json
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# PaddleOCR model cache & temp OCR dirs
+ocr-server/.paddlex/
+ocr-server/contract-ocr-*/
+
+# OS & editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
