@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import { analyzeContractText } from '../../api/gemini.js'
+import { analyzeContractText } from '../../api/claude.js'
 import DeviceShell from '../../components/layout/DeviceShell.jsx'
 
 const inFlightAnalysisByText = new Map()

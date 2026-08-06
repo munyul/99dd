@@ -4,12 +4,12 @@ import MainLayout from '../../components/layout/MainLayout.jsx'
 import Badge from '../../components/master/Badge.jsx'
 import Button from '../../components/master/Button.jsx'
 import Card from '../../components/master/Card.jsx'
-import { getActiveTabFromPath } from '../../constants/screenRoutes.js'
+import { getActiveTabFromPath, SCREEN_PATHS } from '../../constants/screenRoutes.js'
 
 const STANDALONE_SCREEN_PATTERN = /^\/screen\/(7|8|9|10|11|12|16|17|18)$/
 const MY_PAGE_PATTERN = /^\/screen\/19/
 
-function HomeContent({ onStart }) {
+function HomeContent({ onStart, onCapture, onUpload, onViewHistory, onViewRecent }) {
   return (
     <>
       <section className="hero-card">
@@ -26,18 +26,67 @@ function HomeContent({ onStart }) {
       </section>
 
       <div className="row gap12 home-actions">
-        <Card className="action-card">
+        <Card
+          className="action-card"
+          role="button"
+          tabIndex={0}
+          onClick={onCapture}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              onCapture()
+            }
+          }}
+          style={{ cursor: 'pointer' }}
+        >
           <div className="f15 fw8">계약서 촬영</div>
           <div className="f12 tc action-card-description">카메라로 바로 찍기</div>
         </Card>
-        <Card className="action-card">
+        <Card
+          className="action-card"
+          role="button"
+          tabIndex={0}
+          onClick={onUpload}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              onUpload()
+            }
+          }}
+          style={{ cursor: 'pointer' }}
+        >
           <div className="f15 fw8">파일 업로드</div>
           <div className="f12 tc action-card-description">PDF·이미지 올리기</div>
         </Card>
       </div>
 
-      <div className="section-label">최근 분석 내역</div>
-      <Card className="recent-card">
+      <button
+        type="button"
+        className="section-label"
+        onClick={onViewHistory}
+        style={{
+          background: 'none',
+          border: 0,
+          padding: 0,
+          cursor: 'pointer',
+          fontFamily: 'inherit',
+        }}
+      >
+        최근 분석 내역
+      </button>
+      <Card
+        className="recent-card"
+        role="button"
+        tabIndex={0}
+        onClick={onViewRecent}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault()
+            onViewRecent()
+          }
+        }}
+        style={{ cursor: 'pointer' }}
+      >
         <div className="row between">
           <div className="f14 fw8">알바몬 카페 근로계약서</div>
           <Badge status="danger">위험</Badge>
@@ -80,10 +129,22 @@ function Master() {
 
   return (
     <MainLayout
-      header={<Header variant="home" userName="지민" />}
+      header={
+        <Header
+          variant="home"
+          userName="지민"
+          onRightClick={() => navigate(SCREEN_PATHS.alert)}
+        />
+      }
       activeTab={activeTab}
     >
-      <HomeContent onStart={() => navigate('/screen/7')} />
+      <HomeContent
+        onStart={() => navigate(SCREEN_PATHS.capture)}
+        onCapture={() => navigate(SCREEN_PATHS.capture)}
+        onUpload={() => navigate('/screen/8')}
+        onViewHistory={() => navigate(SCREEN_PATHS.analysisHistory)}
+        onViewRecent={() => navigate('/screen/12')}
+      />
     </MainLayout>
   )
 }

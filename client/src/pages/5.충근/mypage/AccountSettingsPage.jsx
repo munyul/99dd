@@ -3,6 +3,7 @@
 // ===============================================
 import { useState } from "react";
 import SubPageLayout from "./components/SubPageLayout.jsx";
+import EmailAutocompleteInput from "../../../components/common/EmailAutocompleteInput.jsx";
 
 // 입력 필드(input)에 공통으로 적용될 기본 스타일 객체
 const inputStyle = {
@@ -113,10 +114,9 @@ export default function AccountSettingsPage() {
                 >
                   이메일 (아이디)
                 </div>
-                <input
-                  type="email"
+                <EmailAutocompleteInput
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={setEmail}
                   style={inputStyle}
                 />
               </div>

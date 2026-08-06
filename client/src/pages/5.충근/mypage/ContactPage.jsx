@@ -3,6 +3,7 @@
 // ===============================================
 import { useState } from "react";
 import SubPageLayout from "./components/SubPageLayout.jsx";
+import EmailAutocompleteInput from "../../../components/common/EmailAutocompleteInput.jsx";
 
 // 문의 유형 카테고리 목록
 const CATEGORIES = ["분석 오류", "기능 제안", "이용 문의", "기타"];
@@ -208,10 +209,9 @@ export default function ContactPage() {
             >
               답변 받을 이메일
             </div>
-            <input
-              type="email"
+            <EmailAutocompleteInput
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={setEmail}
               placeholder="example@email.com"
               style={{
                 width: "100%",

@@ -21,17 +21,32 @@
   --r-btn: 18px;
   --r-chip: 100px;
   --shadow: 0 8px 24px rgba(20, 20, 20, 0.06), 0 2px 6px rgba(20, 20, 20, 0.04);
-  --shadow-lg: 0 16px 40px rgba(20, 20, 20, 0.12), 0 4px 12px rgba(20, 20, 20, 0.06);
+  --shadow-lg:
+    0 16px 40px rgba(20, 20, 20, 0.12), 0 4px 12px rgba(20, 20, 20, 0.06);
   --device-w: 390px;
   --device-h: 844px;
   --safe-bottom: 34px;
   --topnav-h: 52px;
   --bottomnav-h: 64px;
-  font-family: "Nanum Gothic", sans-serif;
+  --gray-100: #f7f7f6;
+  --gray-200: #f5f5f4;
+  --gray-300: #f1f1f1;
+  --gray-400: #eeeeee;
+  --tracking-tight: -0.03em;
+  --tracking-snug: -0.02em;
+  --tracking-normal: -0.01em;
+  font-family:
+    "Pretendard",
+    "Nanum Gothic",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   color: var(--ink);
   background: #ededed;
+  letter-spacing: var(--tracking-normal);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
@@ -71,10 +86,13 @@ h3,
 h4 {
   color: var(--ink);
   font-weight: 800;
+  letter-spacing: var(--tracking-snug);
+  line-height: 1.35;
 }
 
 p {
   color: var(--ink-2);
+  letter-spacing: var(--tracking-normal);
   line-height: 1.6;
 }
 
@@ -94,19 +112,63 @@ p {
   font-variation-settings: "FILL" 1;
 }
 
-.f11 { font-size: 11px; }
-.f12 { font-size: 12px; }
-.f13 { font-size: 13px; }
-.f14 { font-size: 14px; }
-.f15 { font-size: 15px; }
-.f16 { font-size: 16px; }
-.f18 { font-size: 18px; }
-.f20 { font-size: 20px; }
-.f22 { font-size: 22px; }
-.fw7 { font-weight: 700; }
-.fw8 { font-weight: 800; }
-.tc { color: var(--ink-3); }
-.tc2 { color: var(--ink-2); }
+.f11 {
+  font-size: 11px;
+  line-height: 1.45;
+  letter-spacing: var(--tracking-normal);
+}
+.f12 {
+  font-size: 12px;
+  line-height: 1.45;
+  letter-spacing: var(--tracking-normal);
+}
+.f13 {
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: var(--tracking-normal);
+}
+.f14 {
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: var(--tracking-normal);
+}
+.f15 {
+  font-size: 15px;
+  line-height: 1.5;
+  letter-spacing: var(--tracking-normal);
+}
+.f16 {
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: var(--tracking-normal);
+}
+.f18 {
+  font-size: 18px;
+  line-height: 1.45;
+  letter-spacing: var(--tracking-snug);
+}
+.f20 {
+  font-size: 20px;
+  line-height: 1.4;
+  letter-spacing: var(--tracking-snug);
+}
+.f22 {
+  font-size: 22px;
+  line-height: 1.35;
+  letter-spacing: var(--tracking-snug);
+}
+.fw7 {
+  font-weight: 700;
+}
+.fw8 {
+  font-weight: 800;
+}
+.tc {
+  color: var(--ink-3);
+}
+.tc2 {
+  color: var(--ink-2);
+}
 
 .row {
   display: flex;
@@ -117,17 +179,27 @@ p {
   justify-content: space-between;
 }
 
-.gap8 { gap: 8px; }
-.gap10 { gap: 10px; }
-.gap12 { gap: 12px; }
+.gap8 {
+  gap: 8px;
+}
+.gap10 {
+  gap: 10px;
+}
+.gap12 {
+  gap: 12px;
+}
 
 .col {
   display: flex;
   flex-direction: column;
 }
 
-.mt4 { margin-top: 4px; }
-.mt16 { margin-top: 16px; }
+.mt4 {
+  margin-top: 4px;
+}
+.mt16 {
+  margin-top: 16px;
+}
 
 .ellipsis {
   overflow: hidden;
@@ -219,12 +291,13 @@ p {
   width: 36px;
   height: 36px;
   border-radius: 12px;
-  background: #f5f5f4;
+  background: var(--gray-200);
 }
 
 .topnav-title {
   font-size: 17px;
   font-weight: 800;
+  letter-spacing: var(--tracking-snug);
 }
 
 .alarmhead {
@@ -244,6 +317,7 @@ p {
   font-size: 17px;
   font-weight: 800;
   line-height: 1;
+  letter-spacing: var(--tracking-snug);
 }
 
 .topnav-placeholder {
@@ -273,7 +347,7 @@ p {
   justify-content: center;
   overflow: hidden;
   border-radius: 50%;
-  background: #f5f5f4;
+  background: var(--gray-200);
 }
 
 .avatar .msr {
@@ -355,6 +429,7 @@ p {
   cursor: pointer;
   font-size: 16px;
   font-weight: 800;
+  letter-spacing: var(--tracking-snug);
 }
 
 .btn-primary {
@@ -391,7 +466,7 @@ p {
 .card-flat {
   padding: 18px;
   border-radius: var(--r-card);
-  background: #f7f7f6;
+  background: var(--gray-100);
 }
 
 .badge {
@@ -402,6 +477,7 @@ p {
   border-radius: 100px;
   font-size: 12px;
   font-weight: 800;
+  letter-spacing: var(--tracking-normal);
   white-space: nowrap;
 }
 
@@ -427,11 +503,12 @@ p {
   padding: 9px 15px;
   border: 0;
   border-radius: var(--r-chip);
-  background: #f5f5f4;
+  background: var(--gray-200);
   color: var(--ink-2);
   cursor: pointer;
   font-size: 13px;
   font-weight: 700;
+  letter-spacing: var(--tracking-normal);
 }
 
 .chip.active {
@@ -473,6 +550,7 @@ p {
   color: var(--white);
   font-size: 18px;
   line-height: 1.4;
+  letter-spacing: var(--tracking-snug);
 }
 
 .hero-button {
@@ -505,6 +583,7 @@ p {
   color: var(--ink-3);
   font-size: 12px;
   font-weight: 800;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 
@@ -565,10 +644,6 @@ p {
   display: none;
 }
 
-.history-card {
-  margin-bottom: 12px;
-}
-
 /* 기존 Master.jsx의 AlarmContent용 스타일 */
 .notification-item {
   display: flex;
@@ -604,6 +679,7 @@ p {
   color: var(--ink-3);
   font-size: 12px;
   font-weight: 800;
+  letter-spacing: 0.02em;
 }
 
 .alert-notification-items {
@@ -650,7 +726,7 @@ p {
 }
 
 .notification-icon-default {
-  background: #f1f1f1;
+  background: var(--gray-300);
   color: var(--ink);
 }
 
@@ -755,55 +831,47 @@ p {
 ========================= */
 
 .history-card {
+  margin-bottom: 12px;
   padding: 16px;
 }
 
-
 .history-icon {
+  display: flex;
   width: 40px;
   height: 40px;
-  border-radius: 12px;
-
-  display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-
-  flex-shrink: 0;
+  border-radius: 12px;
 }
-
 
 .history-icon-danger {
   background: var(--danger-bg);
   color: var(--danger);
 }
 
-
 .history-icon-caution {
-  background: var(--warning-bg);
-  color: var(--warning);
+  background: var(--caution-bg);
+  color: var(--caution);
 }
-
 
 .history-icon-safe {
   background: var(--safe-bg);
   color: var(--safe);
 }
 
-
 .history-icon-pending {
-  background: #f1f1f1;
+  background: var(--gray-300);
   color: #999;
 }
-
 
 .history-body {
   flex: 1;
   min-width: 0;
 }
 
-
 .badge-gray {
-  background: #eeeeee;
+  background: var(--gray-400);
   color: #777;
 }
 
@@ -867,7 +935,7 @@ p {
   align-items: center;
   justify-content: center;
   border-radius: 22px;
-  background: #f1f1f1;
+  background: var(--gray-300);
 }
 
 .expert-option-icon .msr {
@@ -889,6 +957,7 @@ p {
   font-size: 18px;
   font-weight: 800;
   line-height: 1.25;
+  letter-spacing: var(--tracking-snug);
 }
 
 .expert-option-copy span {
@@ -921,7 +990,7 @@ p {
 .expert-faq-item {
   overflow: hidden;
   border-radius: 28px;
-  background: #f6f6f5;
+  background: var(--gray-100);
 }
 
 .expert-faq-question {
@@ -937,6 +1006,7 @@ p {
   cursor: pointer;
   font-size: 17px;
   font-weight: 800;
+  letter-spacing: var(--tracking-snug);
   text-align: left;
 }
 

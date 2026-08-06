@@ -268,7 +268,7 @@ function AnalysisResult({
       return
     }
 
-    showFeedback('전문가 상담 기능은 다음 연결 단계에서 제공돼요.')
+    navigate('/screen/16', { state: { analysisResult } })
   }
 
   const highlightProps = (segment) => ({
